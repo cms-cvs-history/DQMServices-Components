@@ -1,4 +1,0 @@
-<library file=stubs/ExampleClient.cc name=testExampleClient>
-   <use name=DQMServices/Components>
-   <use name=boost>
-</library> 
