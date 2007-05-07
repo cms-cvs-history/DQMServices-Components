@@ -9,7 +9,6 @@
 <use name=xdaq>
 <export>
 <use name=EventFilter/Utilities>
-<use name=FWCore/Sources>
 <use name=xdaq>
 <lib name=DQMServicesComponents>
 </export>
