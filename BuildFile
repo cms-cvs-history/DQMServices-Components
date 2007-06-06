@@ -6,12 +6,10 @@
 <use name=FWCore/Framework>
 <use name=FWCore/ParameterSet>
 <use name=FWCore/ServiceRegistry>
-<use name=FWCore/Sources>
 <use name=xdaq>
 <export>
-  <use name=EventFilter/Utilities>
-  <use name=FWCore/Sources>
-  <use name=xdaq>
-  <lib name=DQMServicesComponents>
+<use name=EventFilter/Utilities>
+<use name=xdaq>
+<lib name=DQMServicesComponents>
 </export>
-
+<flags SEAL_PLUGIN_NAME="DQMServicesComponents">
