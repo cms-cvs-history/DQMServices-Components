@@ -3,6 +3,8 @@
     module dqmEnv = DQMEventInfo {
         # define folder to store event info (default: EventInfo)
         untracked string eventInfoFolder = "EventInfo"
+	# put your subsystem name here (this goes into the foldername)
+        untracked string subSystemFolder = "YourSubsystem"
     }
 
     # DQM Online File saver module
@@ -13,7 +15,7 @@
         # FIXME         (toplevel of me-dir-tree) fixme
         # put your Subsystem Name here: 
         # DT, Ecal, Hcal, SiStrip, Pixel, RPC, CSC, L1T 
-        untracked string fileName = "SubsystemName"
+        untracked string fileName = "YourSubsytem"
         //# FIXME should be implemented in dbe::save first
         //untracked string environment = "Online"
         # Save file every N lumi sections (-1: disabled)
