@@ -16,6 +16,9 @@
         # put your Subsystem Name here: 
         # DT, Ecal, Hcal, SiStrip, Pixel, RPC, CSC, L1T 
         untracked string fileName = "YourSubsytem"
+        # directory Name (default is ".")
+        # for online use "/data1/dropbox"
+        untracked string fileName = "."
         //# FIXME should be implemented in dbe::save first
         //untracked string environment = "Online"
         # Save file every N lumi sections (-1: disabled)
