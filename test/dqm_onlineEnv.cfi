@@ -18,7 +18,7 @@
         untracked string fileName = "YourSubsytem"
         # directory Name (default is ".")
         # for online use "/data1/dropbox"
-        untracked string fileName = "."
+        untracked string dirName = "."
         //# FIXME should be implemented in dbe::save first
         //untracked string environment = "Online"
         # Save file every N lumi sections (-1: disabled)
