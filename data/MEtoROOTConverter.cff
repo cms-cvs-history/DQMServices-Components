@@ -1,5 +1,0 @@
-## needed backend
-service = DaqMonitorROOTBackEnd{ }
-  
-## actual producer
-include "DQMServices/Components/data/MEtoROOTConverter.cfi"
