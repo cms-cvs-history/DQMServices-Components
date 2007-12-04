@@ -19,6 +19,9 @@
         # directory Name (default is ".")
         # for online use "/data1/dropbox"
         untracked string dirName = "."
+        # for playback explicitly use isPlayback = true
+        # default is false
+        untracked bool isPlayback = false
         //# FIXME should be implemented in dbe::save first
         //untracked string environment = "Online"
         # Save file every N lumi sections (-1: disabled)
