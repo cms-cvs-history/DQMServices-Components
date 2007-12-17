@@ -1,8 +1,0 @@
-module ROOTtoMEConverter = ROOTtoMEConverter
-{
-    untracked string Name = "ROOTtoMEConverter"
-    untracked int32 Verbosity = 0  # 0 provides no output
-                                   # 1 provides basic output
-    string Outputfile = "ROOTtoMEConverter.root"
-    untracked int32 Frequency = 50 # frequency of current processing blurb
-}
