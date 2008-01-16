@@ -2,9 +2,9 @@
  * \file DQMEventInfo.cc
  * \author M. Zanetti - CERN PH
  * Last Update:
- * $Date: 2007/12/17 21:19:20 $
- * $Revision: 1.11 $
- * $Author: wfisher $
+ * $Date: 2008/01/16 21:44:17 $
+ * $Revision: 1.11.2.1 $
+ * $Author: ameyer $
  *
  */
 
@@ -105,7 +105,6 @@ void DQMEventInfo::analyze(const Event& e, const EventSetup& c){
   processLatency_->Fill(getUTCtime(&lastUpdateTime_,&currentTime_));
 
   float time = getUTCtime(&lastAvgTime_,&currentTime_);
-  std::cout << " time " << time << " " << evtRateCount_ << std::endl ;
   if(time>=(evtRateWindow_*60.0)){
     processEventRate_->Fill((float)evtRateCount_/time);
     evtRateCount_ = 0;
