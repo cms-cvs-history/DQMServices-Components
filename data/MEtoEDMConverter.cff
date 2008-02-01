@@ -2,4 +2,4 @@
 service = DaqMonitorROOTBackEnd{ }
   
 ## actual producer
-include "DQMServices/Components/data/MEtoROOTConverter.cfi"
+include "DQMServices/Components/data/MEtoEDMConverter.cfi"

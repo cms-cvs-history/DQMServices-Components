@@ -15,14 +15,14 @@ service = MessageLogger
    untracked vstring categories = 
    { 
 	"FwkJob",
-	"MEtoROOTConverter_MEtoROOTConverter",
-	"MEtoROOTConverter_endJob",
-	"MEtoROOTConverter_beginRun",
-	"MEtoROOTConverter_endRun",	
-	"ROOTtoMEConverter_ROOTtoMEConverter",
-	"ROOTtoMEConverter_endJob",
-	"ROOTtoMEConverter_beginRun",
-	"ROOTtoMEConverter_endRun",
+	"MEtoEDMConverter_MEtoEDMConverter",
+	"MEtoEDMConverter_endJob",
+	"MEtoEDMConverter_beginRun",
+	"MEtoEDMConverter_endRun",	
+	"EDMtoMEConverter_EDMtoMEConverter",
+	"EDMtoMEConverter_endJob",
+	"EDMtoMEConverter_beginRun",
+	"EDMtoMEConverter_endRun",
 	"ScheduleExecutionFailure",
 	"EventSetupDependency",
 	"Root_Warning",
@@ -34,21 +34,21 @@ service = MessageLogger
       untracked int32 lineLength = 132
       untracked bool noLineBreaks = true
       untracked PSet default = { untracked int32 limit = 0  }
-      untracked PSet MEtoROOTConverter_MEtoROOTConverter = 
+      untracked PSet MEtoEDMConverter_MEtoEDMConverter = 
         { untracked int32 limit = 10000000 }
-      untracked PSet MEtoROOTConverter_endJob = 
+      untracked PSet MEtoEDMConverter_endJob = 
         { untracked int32 limit = 10000000 }
-      untracked PSet MEtoROOTConverter_beginRun = 
+      untracked PSet MEtoEDMConverter_beginRun = 
         { untracked int32 limit = 10000000 }
-      untracked PSet MEtoROOTConverter_endRun = 
+      untracked PSet MEtoEDMConverter_endRun = 
         { untracked int32 limit = 10000000 }
-      untracked PSet ROOTtoMEConverter_ROOTtoMEConverter = 
+      untracked PSet EDMtoMEConverter_EDMtoMEConverter = 
         { untracked int32 limit = 10000000 }
-      untracked PSet ROOTtoMEConverter_endJob = 
+      untracked PSet EDMtoMEConverter_endJob = 
         { untracked int32 limit = 10000000 }
-      untracked PSet ROOTtoMEConverter_beginRun = 
+      untracked PSet EDMtoMEConverter_beginRun = 
         { untracked int32 limit = 10000000 }
-      untracked PSet ROOTtoMEConverter_endRun = 
+      untracked PSet EDMtoMEConverter_endRun = 
         { untracked int32 limit = 10000000 }
       untracked PSet ScheduleExecutionFailure = 
         { untracked int32 limit = 10000000 }
@@ -66,21 +66,21 @@ service = MessageLogger
       untracked bool noLineBreaks = true
       untracked string threshold = "INFO"
       untracked PSet default = { untracked int32 limit = 0  }
-      untracked PSet MEtoROOTConverter_MEtoROOTConverter = 
+      untracked PSet MEtoEDMConverter_MEtoEDMConverter = 
         { untracked int32 limit = 10000000 }
-      untracked PSet MEtoROOTConverter_endJob = 
+      untracked PSet MEtoEDMConverter_endJob = 
         { untracked int32 limit = 10000000 }
-      untracked PSet MEtoROOTConverter_beginRun = 
+      untracked PSet MEtoEDMConverter_beginRun = 
         { untracked int32 limit = 10000000 }
-      untracked PSet MEtoROOTConverter_endRun = 
+      untracked PSet MEtoEDMConverter_endRun = 
         { untracked int32 limit = 10000000 }
-      untracked PSet ROOTtoMEConverter_ROOTtoMEConverter = 
+      untracked PSet EDMtoMEConverter_EDMtoMEConverter = 
         { untracked int32 limit = 10000000 }
-      untracked PSet ROOTtoMEConverter_endJob = 
+      untracked PSet EDMtoMEConverter_endJob = 
         { untracked int32 limit = 10000000 }
-      untracked PSet ROOTtoMEConverter_beginRun = 
+      untracked PSet EDMtoMEConverter_beginRun = 
         { untracked int32 limit = 10000000 }
-      untracked PSet ROOTtoMEConverter_endRun = 
+      untracked PSet EDMtoMEConverter_endRun = 
         { untracked int32 limit = 10000000 }
     }
 
@@ -90,21 +90,21 @@ service = MessageLogger
       untracked bool noLineBreaks = true
       untracked string threshold = "WARNING"
       untracked PSet default = { untracked int32 limit = 0  }
-      untracked PSet MEtoROOTConverter_MEtoROOTConverter = 
+      untracked PSet MEtoEDMConverter_MEtoEDMConverter = 
         { untracked int32 limit = 10000000 }
-      untracked PSet MEtoROOTConverter_endJob = 
+      untracked PSet MEtoEDMConverter_endJob = 
         { untracked int32 limit = 10000000 }
-      untracked PSet MEtoROOTConverter_beginRun = 
+      untracked PSet MEtoEDMConverter_beginRun = 
         { untracked int32 limit = 10000000 }
-      untracked PSet MEtoROOTConverter_endRun = 
+      untracked PSet MEtoEDMConverter_endRun = 
         { untracked int32 limit = 10000000 }
-      untracked PSet ROOTtoMEConverter_ROOTtoMEConverter = 
+      untracked PSet EDMtoMEConverter_EDMtoMEConverter = 
         { untracked int32 limit = 10000000 }
-      untracked PSet ROOTtoMEConverter_endJob = 
+      untracked PSet EDMtoMEConverter_endJob = 
         { untracked int32 limit = 10000000 }
-      untracked PSet ROOTtoMEConverter_beginRun = 
+      untracked PSet EDMtoMEConverter_beginRun = 
         { untracked int32 limit = 10000000 }
-      untracked PSet ROOTtoMEConverter_endRun = 
+      untracked PSet EDMtoMEConverter_endRun = 
         { untracked int32 limit = 10000000 }
       untracked PSet ScheduleExecutionFailure = 
         { untracked int32 limit = 10000000 }
