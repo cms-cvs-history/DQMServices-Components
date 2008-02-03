@@ -4,7 +4,7 @@ service = DaqMonitorROOTBackEnd {
          untracked int32 verbose = 0
          # default ""
          untracked string referenceFileName = "" 
-         # default false
+         # default true
          untracked bool collateHistograms = true
          }
   
