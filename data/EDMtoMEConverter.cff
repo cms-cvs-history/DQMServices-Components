@@ -5,7 +5,7 @@ service = DaqMonitorROOTBackEnd {
          # default ""
          untracked string referenceFileName = "" 
          # default false
-         untracked bool collateHistograms = false
+         untracked bool collateHistograms = true
          }
   
 ## actual producer
