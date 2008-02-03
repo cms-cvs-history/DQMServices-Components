@@ -1,5 +1,12 @@
 ## needed backend
-service = DaqMonitorROOTBackEnd{ }
+service = DaqMonitorROOTBackEnd { 
+         # default 0
+         untracked int32 verbose = 0
+         # default ""
+         untracked string referenceFileName = "" 
+         # default false
+         untracked bool collateHistograms = false
+         }
   
 ## actual producer
 include "DQMServices/Components/data/EDMtoMEConverter.cfi"
