@@ -1,0 +1,40 @@
+    # DQM Online Environment
+ #### PUT THIS MODULE INTO YOUR PATH FOR OPERATION AT P5
+    module dqmEnv = DQMEventInfo {
+        # define folder to store event info (default: EventInfo)
+        untracked string eventInfoFolder = "EventInfo"
+	# put your subsystem name here (this goes into the foldername)
+        untracked string subSystemFolder = "YourSubsystem"
+        # set the window for eventrate calculation (in minutes)
+        untracked double eventRateWindow = 0.5
+    }
+
+    # DQM Online File saver module
+ #### PUT THIS MODULE INTO YOUR PATH FOR OPERATION AT P5
+    module dqmSaver = DQMFileSaver {
+        # subsystem name (appears in filename)
+        # default is: filename is taken from SourceName
+        # FIXME         (toplevel of me-dir-tree) fixme
+        # put your Subsystem Name here: 
+        # DT, Ecal, Hcal, SiStrip, Pixel, RPC, CSC, L1T 
+        untracked string fileName = "YourSubsytem"
+        # directory Name (default is ".")
+        # for online use "/data1/dropbox"
+        untracked string dirName = "."
+        # for playback explicitly use isPlayback = true
+        # default is false
+        untracked bool isPlayback = false
+        //# FIXME should be implemented in dbe::save first
+        //untracked string environment = "Online"
+        # Save file every N lumi sections (-1: disabled)
+        untracked int32 prescaleLS = -1
+        # Save file every N events (-1: disabled)
+        untracked int32 prescaleEvt = -1
+        # Save file every N minutes (-1: disabled)
+        untracked int32 prescaleTime = -1
+        # Save at end of run, runnumber in filename (default: true)
+        untracked bool saveAtRunEnd = true
+        # Save at end of job, no runnumber in filename (default: false)
+        untracked bool saveAtJobEnd = false
+    }
+
