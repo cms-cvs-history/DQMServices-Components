@@ -5,6 +5,8 @@
         untracked string eventInfoFolder = "EventInfo"
 	# put your subsystem name here (this goes into the foldername)
         untracked string subSystemFolder = "YourSubsystem"
+        # set the window for eventrate calculation (in minutes)
+        untracked double eventRateWindow = 0.5
     }
 
     # DQM Online File saver module
