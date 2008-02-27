@@ -3,8 +3,8 @@
  *  
  *  See header file for description of class
  *
- *  $Date: 2008/02/08 06:40:30 $
- *  $Revision: 1.3 $
+ *  $Date: 2008/02/21 18:22:23 $
+ *  $Revision: 1.4.2.2 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -415,6 +415,7 @@ void MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
 	  TProfile2DME.name.push_back(fullpathvec[a]);
 	  TProfile2DME.tags.push_back(taglist);
 	}
+	me->Reset();
       } else if (FoldableMonitor *ob = dynamic_cast<FoldableMonitor *>(me)) {
 	if (TObjString* histogram = 
 	    dynamic_cast<TObjString*>(ob->getTagObject())) {
