@@ -1,5 +1,5 @@
 ## needed backend
-service = DaqMonitorROOTBackEnd { 
+service = DQMStore { 
          # default 0
          untracked int32 verbose = 0
          # default ""
