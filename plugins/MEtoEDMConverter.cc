@@ -3,8 +3,8 @@
  *  
  *  See header file for description of class
  *
- *  $Date: 2008/02/21 18:22:23 $
- *  $Revision: 1.4.2.2 $
+ *  $Date: 2008/02/27 20:39:38 $
+ *  $Revision: 1.4.2.3 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -373,6 +373,7 @@ void MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
 	  TH1FME.object.push_back(*histogram);
 	  TH1FME.name.push_back(fullpathvec[a]);
 	  TH1FME.tags.push_back(taglist);
+          me->Reset();
 	}
 	if (TH2F* histogram = dynamic_cast<TH2F*>(ob->operator->())) {
 	  validME = true;
@@ -383,6 +384,7 @@ void MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
 	  TH2FME.object.push_back(*histogram);
 	  TH2FME.name.push_back(fullpathvec[a]);
 	  TH2FME.tags.push_back(taglist);
+          me->Reset();
 	}	
 	if (TH3F* histogram = dynamic_cast<TH3F*>(ob->operator->())) {
 	  validME = true;
@@ -393,6 +395,7 @@ void MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
 	  TH3FME.object.push_back(*histogram);
 	  TH3FME.name.push_back(fullpathvec[a]);
 	  TH3FME.tags.push_back(taglist);
+          me->Reset();
 	}  
 	if (TProfile* histogram = dynamic_cast<TProfile*>(ob->operator->())) {
 	  validME = true;
@@ -403,6 +406,7 @@ void MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
 	  TProfileME.object.push_back(*histogram);
 	  TProfileME.name.push_back(fullpathvec[a]);
 	  TProfileME.tags.push_back(taglist);
+          me->Reset();
 	}  	
 	if (TProfile2D* histogram = 
 	    dynamic_cast<TProfile2D*>(ob->operator->())) {
@@ -414,6 +418,7 @@ void MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
 	  TProfile2DME.object.push_back(*histogram);
 	  TProfile2DME.name.push_back(fullpathvec[a]);
 	  TProfile2DME.tags.push_back(taglist);
+          me->Reset();
 	}
 	me->Reset();
       } else if (FoldableMonitor *ob = dynamic_cast<FoldableMonitor *>(me)) {
