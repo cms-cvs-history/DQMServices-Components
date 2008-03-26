@@ -36,5 +36,7 @@
         untracked bool saveAtRunEnd = true
         # Save at end of job, no runnumber in filename (default: false)
         untracked bool saveAtJobEnd = false
+        # Set the right configuration for validation
+        untracked bool saveAsValidation = false
     }
 

@@ -3,6 +3,10 @@ module EDMtoMEConverter = EDMtoMEConverter
     untracked string Name = "EDMtoMEConverter"
     untracked int32 Verbosity = 0  # 0 provides no output
                                    # 1 provides basic output
-    string Outputfile = "EDMtoMEConverter.root"
     untracked int32 Frequency = 50 # frequency of current processing blurb
+    untracked string Dataset = "seeEDMtoMEConvertercfi" //this needs to be 
+                                                        //reset to a value 
+                                                        //that is indicative 
+                                                        //of the dataset
+                                                        //source
 }

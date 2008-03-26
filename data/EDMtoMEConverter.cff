@@ -1,12 +1,13 @@
 ## needed backend
-service = DQMStore { 
-         # default 0
-         untracked int32 verbose = 0
-         # default ""
-         untracked string referenceFileName = "" 
-         # default true
-         untracked bool collateHistograms = true
-         }
+service = DQMStore {
+  untracked string referenceFileName = "" 
+  untracked int32 verbose = 0 
+  untracked bool collateHistograms = true
+}
+
+## needed output
+include "DQMServices/Components/test/dqm_onlineEnv.cfi"
+replace dqmSaver.saveAsValidation = true
   
 ## actual producer
 include "DQMServices/Components/data/EDMtoMEConverter.cfi"
