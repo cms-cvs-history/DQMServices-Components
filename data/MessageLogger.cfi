@@ -23,6 +23,10 @@ service = MessageLogger
 	"EDMtoMEConverter_endJob",
 	"EDMtoMEConverter_beginRun",
 	"EDMtoMEConverter_endRun",
+	"ConverterTester_ConverterTester",
+	"ConverterTester_endJob",
+	"ConverterTester_beginRun",
+	"ConverterTester_endRun",
 	"ScheduleExecutionFailure",
 	"EventSetupDependency",
 	"Root_Warning",
@@ -49,6 +53,14 @@ service = MessageLogger
       untracked PSet EDMtoMEConverter_beginRun = 
         { untracked int32 limit = 10000000 }
       untracked PSet EDMtoMEConverter_endRun = 
+        { untracked int32 limit = 10000000 }
+     untracked PSet ConverterTester_ConverterTester = 
+        { untracked int32 limit = 10000000 }
+      untracked PSet ConverterTester_endJob = 
+        { untracked int32 limit = 10000000 }
+      untracked PSet ConverterTester_beginRun = 
+        { untracked int32 limit = 10000000 }
+      untracked PSet ConverterTester_endRun = 
         { untracked int32 limit = 10000000 }
       untracked PSet ScheduleExecutionFailure = 
         { untracked int32 limit = 10000000 }
@@ -82,6 +94,14 @@ service = MessageLogger
         { untracked int32 limit = 10000000 }
       untracked PSet EDMtoMEConverter_endRun = 
         { untracked int32 limit = 10000000 }
+      untracked PSet ConverterTester_ConverterTester = 
+        { untracked int32 limit = 10000000 }
+      untracked PSet ConverterTester_endJob = 
+        { untracked int32 limit = 10000000 }
+      untracked PSet ConverterTester_beginRun = 
+        { untracked int32 limit = 10000000 }
+      untracked PSet ConverterTester_endRun = 
+        { untracked int32 limit = 10000000 }
     }
 
    untracked PSet cerr =
@@ -105,6 +125,14 @@ service = MessageLogger
       untracked PSet EDMtoMEConverter_beginRun = 
         { untracked int32 limit = 10000000 }
       untracked PSet EDMtoMEConverter_endRun = 
+        { untracked int32 limit = 10000000 }
+      untracked PSet ConverterTester_ConverterTester = 
+        { untracked int32 limit = 10000000 }
+      untracked PSet ConverterTester_endJob = 
+        { untracked int32 limit = 10000000 }
+      untracked PSet ConverterTester_beginRun = 
+        { untracked int32 limit = 10000000 }
+      untracked PSet ConverterTester_endRun = 
         { untracked int32 limit = 10000000 }
       untracked PSet ScheduleExecutionFailure = 
         { untracked int32 limit = 10000000 }
