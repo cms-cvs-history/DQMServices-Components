@@ -7,14 +7,6 @@ service = DQMStore {
 
 ## needed output
 include "DQMServices/Components/test/dqm_onlineEnv.cfi"
-replace dqmSaver.saveAsValidation = true
-# Enable this option for the release  
-# replace dqmSaver.addDataset = true
-replace dqmSaver.dataset = "DataSetName" //this needs to be
-                                         //reset to a value 
-                                         //that is indicative 
-                                         //of the dataset
-                                         //source
-             
+
 ## actual producer
 include "DQMServices/Components/data/EDMtoMEConverter.cfi"
