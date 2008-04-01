@@ -3,8 +3,8 @@
  *  
  *  See header file for description of class
  *
- *  $Date: 2008/03/04 19:17:06 $
- *  $Revision: 1.4.2.4 $
+ *  $Date: 2008/03/10 23:22:42 $
+ *  $Revision: 1.4.2.5 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -223,22 +223,14 @@ MEtoEDMConverter::MEtoEDMConverter(const edm::ParameterSet & iPSet) :
   }
       
   // create persistent objects
-  if (hasTH1F)
-    produces<MEtoEDM<TH1F>, edm::InRun>(fName);
-  if (hasTH2F)
-    produces<MEtoEDM<TH2F>, edm::InRun>(fName);
-  if (hasTH3F)
-    produces<MEtoEDM<TH3F>, edm::InRun>(fName);
-  if (hasTProfile)
-    produces<MEtoEDM<TProfile>, edm::InRun>(fName);
-  if (hasTProfile2D)
-    produces<MEtoEDM<TProfile2D>, edm::InRun>(fName);
-  if (hasFloat)
-    produces<MEtoEDM<float>, edm::InRun>(fName);
-  if (hasInt)
-    produces<MEtoEDM<int>, edm::InRun>(fName);
-  if (hasString)
-    produces<MEtoEDM<TString>, edm::InRun>(fName);
+  produces<MEtoEDM<TH1F>, edm::InRun>(fName);
+  produces<MEtoEDM<TH2F>, edm::InRun>(fName);
+  produces<MEtoEDM<TH3F>, edm::InRun>(fName);
+  produces<MEtoEDM<TProfile>, edm::InRun>(fName);
+  produces<MEtoEDM<TProfile2D>, edm::InRun>(fName);
+  produces<MEtoEDM<float>, edm::InRun>(fName);
+  produces<MEtoEDM<int>, edm::InRun>(fName);
+  produces<MEtoEDM<TString>, edm::InRun>(fName);
 
   count.clear();
 
