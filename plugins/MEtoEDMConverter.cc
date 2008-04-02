@@ -3,8 +3,8 @@
  *  
  *  See header file for description of class
  *
- *  $Date: 2008/03/10 23:22:42 $
- *  $Revision: 1.4.2.5 $
+ *  $Date: 2008/04/01 08:24:51 $
+ *  $Revision: 1.4.2.6 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -45,6 +45,131 @@ MEtoEDMConverter::MEtoEDMConverter(const edm::ParameterSet & iPSet) :
       dbe->setVerbose(0);
     }
   }
+
+  // create persistent objects
+  produces<MEtoEDM<TH1F>, edm::InRun>(fName);
+  produces<MEtoEDM<TH2F>, edm::InRun>(fName);
+  produces<MEtoEDM<TH3F>, edm::InRun>(fName);
+  produces<MEtoEDM<TProfile>, edm::InRun>(fName);
+  produces<MEtoEDM<TProfile2D>, edm::InRun>(fName);
+  produces<MEtoEDM<float>, edm::InRun>(fName);
+  produces<MEtoEDM<int>, edm::InRun>(fName);
+  produces<MEtoEDM<TString>, edm::InRun>(fName);
+
+  count.clear();
+
+} // end constructor
+
+MEtoEDMConverter::~MEtoEDMConverter() 
+{
+} // end destructor
+
+void MEtoEDMConverter::beginJob(const edm::EventSetup& iSetup)
+{
+  return;
+}
+
+void MEtoEDMConverter::endJob()
+{
+  std::string MsgLoggerCat = "MEtoEDMConverter_endJob";
+  if (verbosity >= 0)
+    edm::LogInfo(MsgLoggerCat) 
+      << "Terminating having processed " << count.size() << " runs.";
+  return;
+}
+
+void MEtoEDMConverter::beginRun(edm::Run& iRun, 
+				 const edm::EventSetup& iSetup)
+{
+  std::string MsgLoggerCat = "MEtoEDMConverter_beginRun";
+    
+  int nrun = iRun.run();
+  
+  // keep track of number of runs processed
+  ++count[nrun];
+
+  if (verbosity) {  // keep track of number of runs processed
+    edm::LogInfo(MsgLoggerCat)
+      << "Processing run " << nrun << " (" << count.size() << " runs total)";
+  } else if (verbosity == 0) {
+    if (nrun%frequency == 0 || count.size() == 1) {
+      edm::LogInfo(MsgLoggerCat)
+	<< "Processing run " << nrun << " (" << count.size() << " runs total)";
+    }
+  }
+  
+  // clear out object holders
+  TH1FME.name.clear();
+  TH1FME.tags.clear();
+  TH1FME.object.clear();
+
+  TH2FME.name.clear();
+  TH2FME.tags.clear();
+  TH2FME.object.clear();
+
+  TH3FME.name.clear();
+  TH3FME.tags.clear();
+  TH3FME.object.clear();
+
+  TProfileME.name.clear();
+  TProfileME.tags.clear();
+  TProfileME.object.clear();
+
+  TProfile2DME.name.clear();
+  TProfile2DME.tags.clear();
+  TProfile2DME.object.clear();
+
+  FloatME.name.clear();
+  FloatME.tags.clear();
+  FloatME.object.clear();
+
+  IntME.name.clear();
+  IntME.tags.clear();
+  IntME.object.clear();
+
+  StringME.name.clear();
+  StringME.tags.clear();
+  StringME.object.clear();
+
+  taglist.clear();
+
+  // reset monitor elements
+  for (unsigned int a = 0; a < pkgvec.size(); ++a) {
+   
+    if (MonitorElement *me = dbe->get(fullpathvec[a])) {
+      
+      // reset the ROOT object.  This is either a genuine ROOT object,
+      // or a scalar one that stores its value as TObjString.
+      if (ROOTObj *ob = dynamic_cast<ROOTObj *>(me)) {
+	if (dynamic_cast<TH1F*>(ob->operator->())) {
+          me->Reset();
+	}
+	if (dynamic_cast<TH2F*>(ob->operator->())) {
+          me->Reset();
+	}	
+	if (dynamic_cast<TH3F*>(ob->operator->())) {
+          me->Reset();
+	}  
+	if (dynamic_cast<TProfile*>(ob->operator->())) {
+          me->Reset();
+	}  	
+	if (dynamic_cast<TProfile2D*>(ob->operator->())) {
+          me->Reset();
+	}
+      }
+    } // end get monitor element
+  } // end loop through all monitor elements
+
+  return;
+}
+
+void MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
+{
+  
+  std::string MsgLoggerCat = "MEtoEDMConverter_endRun";
+  
+  if (verbosity)
+    edm::LogInfo (MsgLoggerCat) << "\nStoring MEtoEDM dataformat histograms.";
 
   // clear out the vector holders and information flags
   items.clear();
@@ -222,131 +347,6 @@ MEtoEDMConverter::MEtoEDMConverter(const edm::ParameterSet & iPSet) :
     std::cout << "We have " << nString << " String objects" << std::endl;
   }
       
-  // create persistent objects
-  produces<MEtoEDM<TH1F>, edm::InRun>(fName);
-  produces<MEtoEDM<TH2F>, edm::InRun>(fName);
-  produces<MEtoEDM<TH3F>, edm::InRun>(fName);
-  produces<MEtoEDM<TProfile>, edm::InRun>(fName);
-  produces<MEtoEDM<TProfile2D>, edm::InRun>(fName);
-  produces<MEtoEDM<float>, edm::InRun>(fName);
-  produces<MEtoEDM<int>, edm::InRun>(fName);
-  produces<MEtoEDM<TString>, edm::InRun>(fName);
-
-  count.clear();
-
-} // end constructor
-
-MEtoEDMConverter::~MEtoEDMConverter() 
-{
-} // end destructor
-
-void MEtoEDMConverter::beginJob(const edm::EventSetup& iSetup)
-{
-  return;
-}
-
-void MEtoEDMConverter::endJob()
-{
-  std::string MsgLoggerCat = "MEtoEDMConverter_endJob";
-  if (verbosity >= 0)
-    edm::LogInfo(MsgLoggerCat) 
-      << "Terminating having processed " << count.size() << " runs.";
-  return;
-}
-
-void MEtoEDMConverter::beginRun(edm::Run& iRun, 
-				 const edm::EventSetup& iSetup)
-{
-  std::string MsgLoggerCat = "MEtoEDMConverter_beginRun";
-    
-  int nrun = iRun.run();
-  
-  // keep track of number of runs processed
-  ++count[nrun];
-
-  if (verbosity) {  // keep track of number of runs processed
-    edm::LogInfo(MsgLoggerCat)
-      << "Processing run " << nrun << " (" << count.size() << " runs total)";
-  } else if (verbosity == 0) {
-    if (nrun%frequency == 0 || count.size() == 1) {
-      edm::LogInfo(MsgLoggerCat)
-	<< "Processing run " << nrun << " (" << count.size() << " runs total)";
-    }
-  }
-  
-  // clear out object holders
-  TH1FME.name.clear();
-  TH1FME.tags.clear();
-  TH1FME.object.clear();
-
-  TH2FME.name.clear();
-  TH2FME.tags.clear();
-  TH2FME.object.clear();
-
-  TH3FME.name.clear();
-  TH3FME.tags.clear();
-  TH3FME.object.clear();
-
-  TProfileME.name.clear();
-  TProfileME.tags.clear();
-  TProfileME.object.clear();
-
-  TProfile2DME.name.clear();
-  TProfile2DME.tags.clear();
-  TProfile2DME.object.clear();
-
-  FloatME.name.clear();
-  FloatME.tags.clear();
-  FloatME.object.clear();
-
-  IntME.name.clear();
-  IntME.tags.clear();
-  IntME.object.clear();
-
-  StringME.name.clear();
-  StringME.tags.clear();
-  StringME.object.clear();
-
-  taglist.clear();
-
-  // reset monitor elements
-  for (unsigned int a = 0; a < pkgvec.size(); ++a) {
-   
-    if (MonitorElement *me = dbe->get(fullpathvec[a])) {
-      
-      // reset the ROOT object.  This is either a genuine ROOT object,
-      // or a scalar one that stores its value as TObjString.
-      if (ROOTObj *ob = dynamic_cast<ROOTObj *>(me)) {
-	if (dynamic_cast<TH1F*>(ob->operator->())) {
-          me->Reset();
-	}
-	if (dynamic_cast<TH2F*>(ob->operator->())) {
-          me->Reset();
-	}	
-	if (dynamic_cast<TH3F*>(ob->operator->())) {
-          me->Reset();
-	}  
-	if (dynamic_cast<TProfile*>(ob->operator->())) {
-          me->Reset();
-	}  	
-	if (dynamic_cast<TProfile2D*>(ob->operator->())) {
-          me->Reset();
-	}
-      }
-    } // end get monitor element
-  } // end loop through all monitor elements
-
-  return;
-}
-
-void MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
-{
-  
-  std::string MsgLoggerCat = "MEtoEDMConverter_endRun";
-  
-  if (verbosity)
-    edm::LogInfo (MsgLoggerCat) << "\nStoring MEtoEDM dataformat histograms.";
-
   // extract ME information into vectors
   for (unsigned int a = 0; a < pkgvec.size(); ++a) {
 
