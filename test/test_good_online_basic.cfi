@@ -1,0 +1,23 @@
+  #####################################################################
+  untracked PSet maxEvents = {untracked int32 input = 20000}
+  source = EmptySource {}
+
+  #####################################################################
+  # See DQMServices/Examples/test/dqmStandaloneExample.cfg
+  module dqmSource = DQMSourceExample {
+    untracked string monitorName = "TestSystem"
+    untracked int32 prescaleEvt = 10
+  }
+
+  module qTester = QualityTester {
+    untracked int32 QualityTestPrescaler = 2
+    untracked FileInPath qtList = "DQMServices/Examples/test/QualityTests.xml"
+  }
+
+  module dqmClient = DQMClientExample {
+    untracked string monitorName = "TestSystem"
+    untracked int32 prescaleLS  = -1
+    untracked int32 prescaleEvt  = 1000
+  }
+
+  path p = { dqmSource & qTester & dqmClient }

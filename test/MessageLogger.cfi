@@ -2,7 +2,6 @@ service = MessageLogger
 {
    untracked vstring destinations =
    {
-	"MessageLogger",
 	"cout",
 	"cerr"
    }
@@ -29,59 +28,13 @@ service = MessageLogger
 	"Root_Error"
     }
 
-   untracked PSet MessageLogger =
-   {
-      untracked int32 lineLength = 132
-      untracked bool noLineBreaks = true
-      untracked PSet default = { untracked int32 limit = 0  }
-      untracked PSet MEtoEDMConverter_MEtoEDMConverter = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet MEtoEDMConverter_endJob = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet MEtoEDMConverter_beginRun = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet MEtoEDMConverter_endRun = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EDMtoMEConverter_EDMtoMEConverter = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EDMtoMEConverter_endJob = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EDMtoMEConverter_beginRun = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EDMtoMEConverter_endRun = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet ScheduleExecutionFailure = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EventSetupDependency = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet Root_Warning =
-        { untracked int32 limit = 10000000 }
-      untracked PSet Root_Error =
-        { untracked int32 limit = 10000000 }
-    }
-
    untracked PSet cout =
    {
       untracked int32 lineLength = 132
       untracked bool noLineBreaks = true
       untracked string threshold = "INFO"
-      untracked PSet default = { untracked int32 limit = 0  }
-      untracked PSet MEtoEDMConverter_MEtoEDMConverter = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet MEtoEDMConverter_endJob = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet MEtoEDMConverter_beginRun = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet MEtoEDMConverter_endRun = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EDMtoMEConverter_EDMtoMEConverter = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EDMtoMEConverter_endJob = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EDMtoMEConverter_beginRun = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EDMtoMEConverter_endRun = 
-        { untracked int32 limit = 10000000 }
+      untracked PSet default = { untracked int32 limit = 10000000  }
+      untracked PSet FwkReport = { untracked int32 limit = 0 }
     }
 
    untracked PSet cerr =
@@ -89,37 +42,12 @@ service = MessageLogger
       untracked int32 lineLength = 132
       untracked bool noLineBreaks = true
       untracked string threshold = "WARNING"
-      untracked PSet default = { untracked int32 limit = 0  }
-      untracked PSet MEtoEDMConverter_MEtoEDMConverter = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet MEtoEDMConverter_endJob = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet MEtoEDMConverter_beginRun = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet MEtoEDMConverter_endRun = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EDMtoMEConverter_EDMtoMEConverter = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EDMtoMEConverter_endJob = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EDMtoMEConverter_beginRun = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EDMtoMEConverter_endRun = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet ScheduleExecutionFailure = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet EventSetupDependency = 
-        { untracked int32 limit = 10000000 }
-      untracked PSet Root_Warning =
-        { untracked int32 limit = 10000000 }
-      untracked PSet Root_Error =
-        { untracked int32 limit = 10000000 }
+      untracked PSet default = { untracked int32 limit = 10000000  }
+      untracked PSet FwkReport = { untracked int32 limit = 0 }
     }
 
    untracked PSet FrameworkJobReport = 
    {
-      //untracked PSet default = 
-      //        { untracked int32 limit = 0 }
       untracked PSet FwkJob = 
         { untracked int32 limit = 10000000 }
    }
