@@ -1,0 +1,44 @@
+# DQM Environment
+module dqmEnv = DQMEventInfo {
+  # define folder to store event info (default: EventInfo)
+  untracked string eventInfoFolder = "EventInfo"
+
+  # put your subsystem name here (this goes into the foldername)
+  untracked string subSystemFolder = "YourSubsystem"
+
+  # set the window for eventrate calculation (in minutes)
+  untracked double eventRateWindow = 0.5
+}
+
+# DQM file saver module
+module dqmSaver = DQMFileSaver {
+  # Possible conventions are "Online", "Offline" and "RelVal".
+  untracked string convention = "Offline"
+
+  # Name of the processing workflow.
+  untracked string workflow = ""
+
+  # Name of the producer.
+  untracked string producer = "DQM"
+
+  # Directory in which to save the files.
+  untracked string dirName = "."
+
+  # Save file every N lumi sections (-1: disabled)
+  untracked int32 saveByLumiSection = -1
+
+  # Save file every N events (-1: disabled)
+  untracked int32 saveByEvent = -1
+
+  # Save file every N minutes (-1: disabled)
+  untracked int32 saveByMinute = -1
+
+  # Save file every N runs (-1: disabled)
+  untracked int32 saveByRun = 1
+
+  # Save file at the end of the job
+  untracked bool saveAtJobEnd = false
+
+  # Ignore run number for MC data (-1: disabled)
+  untracked int32 forceRunNumber = -1
+}
