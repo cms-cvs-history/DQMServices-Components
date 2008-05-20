@@ -5,4 +5,5 @@ module MEtoEDMConverter = MEtoEDMConverter
                                    # 1 provides basic output
                                    # 2 provide more detailed output
     untracked int32 Frequency = 50 # frequency of current processing blurb
+    untracked string Path = ""
 }
