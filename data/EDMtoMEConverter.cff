@@ -6,7 +6,7 @@ service = DQMStore {
 }
 
 ## needed output
-include "DQMServices/Components/data/DQMEnvironment.cfi"
+include "DQMServices/Components/test/dqm_onlineEnv.cfi"
 
 ## actual producer
 include "DQMServices/Components/data/EDMtoMEConverter.cfi"
