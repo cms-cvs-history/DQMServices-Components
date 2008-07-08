@@ -33,6 +33,9 @@ module dqmSaver = DQMFileSaver {
   # Save file every N minutes (-1: disabled)
   untracked int32 saveByMinute = -1
 
+  # Save file every 2**N minutes until saveByTime > saveByMinute
+  untracked int32 saveByTime = -1 
+
   # Save file every N runs (-1: disabled)
   untracked int32 saveByRun = 1
 
