@@ -1,5 +1,8 @@
 ## needed backend
-service = DQMStore{ }
+service = DQMStore{
+  untracked string referenceFileName = ""
+  untracked int32 verbose = 0
+}
   
 ## actual producer
 include "DQMServices/Components/data/MEtoEDMConverter.cfi"
