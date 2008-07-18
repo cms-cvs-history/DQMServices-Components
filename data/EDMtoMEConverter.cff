@@ -2,6 +2,7 @@
 service = DQMStore {
   untracked string referenceFileName = "" 
   untracked int32 verbose = 0 
+  untracked bool collateHistograms = false
 }
 
 ## needed output
