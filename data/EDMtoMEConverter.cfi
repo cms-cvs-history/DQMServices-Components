@@ -5,6 +5,6 @@ module EDMtoMEConverter = EDMtoMEConverter
                                    # 1 provides basic output
     untracked int32 Frequency = 50 # frequency of current processing blurb
     untracked bool convertOnEndLumi = false
-    untracked bool convertOnEndRun = false
+    untracked bool convertOnEndRun = true
     untracked int32 prescaleFactor = 1
 }
