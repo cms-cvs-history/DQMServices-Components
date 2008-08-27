@@ -44,4 +44,10 @@ module dqmSaver = DQMFileSaver {
 
   # Ignore run number for MC data (-1: disabled)
   untracked int32 forceRunNumber = -1
+
+  # Control reference saving (default / skip / qtests / all)
+  untracked string referenceHandling = "qtests"
+
+  # Control which references are saved for qtests (default: STATUS_OK)
+  untracked int32 referenceRequireStatus = 100
 }
