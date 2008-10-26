@@ -1,5 +1,6 @@
 #include "DQMServices/Components/src/DQMFileSaver.h"
 #include "DQMServices/Core/interface/DQMStore.h"
+#include "DQMServices/Core/interface/MonitorElement.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/Run.h"
 #include "FWCore/Framework/interface/LuminosityBlock.h"
@@ -47,13 +48,29 @@ DQMFileSaver::saveForOffline(const std::string &workflow, int run)
 void
 DQMFileSaver::saveForOnline(const std::string &suffix, const std::string &rewrite)
 {
-  std::vector<std::string> systems = (dbe_->cd(), dbe_->getSubdirs());
-  for (size_t i = 0, e = systems.size(); i != e; ++i)
-    if (systems[i] != "Reference")
-      dbe_->save(fileBaseName_ + systems[i] + suffix + ".root",
-	         systems[i], "^(Reference/)?([^/]+)", rewrite,
+   std::vector<std::string> systems = (dbe_->cd(), dbe_->getSubdirs());
+
+   for (size_t i = 0, e = systems.size(); i != e; ++i) {
+     if (systems[i] != "Reference") {
+       dbe_->cd();
+       if (MonitorElement* me = dbe_->get(systems[i] + "/EventInfo/processName")){
+         dbe_->save(fileBaseName_ + me->getStringValue() + suffix + ".root",
+	         "" , "^(Reference/)?([^/]+)", rewrite,
 	         (DQMStore::SaveReferenceTag) saveReference_,
 	         saveReferenceQMin_);
+         return;
+       }
+     }
+   }
+
+   // if no EventInfo Folder is found, then store subsystem wise
+   for (size_t i = 0, e = systems.size(); i != e; ++i)
+     if (systems[i] != "Reference")
+         dbe_->save(fileBaseName_ + systems[i] + suffix + ".root",
+	         systems[i] , "^(Reference/)?([^/]+)", rewrite,
+	         (DQMStore::SaveReferenceTag) saveReference_,
+	         saveReferenceQMin_);
+
 }
 
 //--------------------------------------------------------
@@ -344,9 +361,10 @@ DQMFileSaver::endJob(void)
 
       pos = fileBaseName_.rfind('/');
       std::string stream = fileBaseName_.substr(pos+1, fileBaseName_.size()-pos-2);
-      dbe_->save(fileBaseName_ + release + ".root", "",
-		 "^(Reference/)?([^/]+)", "\\1" + stream + "/\\2",
-	         DQMStore::SaveWithReferenceForQTest);
+      dbe_->save(fileBaseName_ + release + ".root",
+		 "", "^(Reference/)?([^/]+)", "\\1" + stream + "/\\2",
+	         (DQMStore::SaveReferenceTag) saveReference_,
+		 saveReferenceQMin_);
     }
     else if (convention_ == Offline && forceRunNumber_ > 0)
       saveForOffline(workflow_, forceRunNumber_);
