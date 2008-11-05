@@ -1,22 +1,7 @@
-include "CondCore/DBCommon/data/CondDBCommon.cfi" 
-untracked PSet maxEvents = {untracked int32 input = 100}
-replace CondDBCommon.connect ="oracle://cms_orcoff_prod/CMS_COND_21X_RUN_INFO"
-replace CondDBCommon.DBParameters.authenticationPath = "/afs/cern.ch/cms/DB/conddb/"
-
-es_source rn = PoolDBESSource {
-      
-using CondDBCommon
-string timetype = "runnumber" 
-VPSet toGet = {
- {string record = "RunSummaryRcd"
-   string tag = "runsummary_test"
-  } 
- } 
-}
-
 
 module DaqData =  DQMDaqInfo{
  untracked bool saveDCFile  = true 
+ untracked bool FedGranularityInput = false
  string outputFile = "dqmDaqInfo.txt"
  bool saveRootFile = true
  string OutputFileName = "DQMDAQDataCert.root"
