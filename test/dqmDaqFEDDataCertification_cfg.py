@@ -2,10 +2,10 @@ import FWCore.ParameterSet.Config as cms
 
 process = cms.Process("DataCert")
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
-process.load("DQMServices.Components.DQMOfflineCosmics_Certification_cff")
+process.load("DQMServices.Components.DQMDaqInfo_cfi")
 
-process.DaqData.FedGranularityInput = True
-process.DaqData.saveDCFile = False
+process.dqmDaqInfo.FedGranularityInput = True
+process.dqmDaqInfo.saveDCFile = True
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring('file:/tmp/segoni/FileFromRun648148.root')
@@ -34,13 +34,16 @@ process.rn = cms.ESSource("PoolDBESSource",
 )
 
 
-process.PoolSource.fileNames = ['/store/data/Commissioning08/Cosmics/RECO/v1/000/066/394/229A4AEE-359B-DD11-B144-000423D99B3E.root']
+#Run with DAQ info in ORCOFF:
+#process.PoolSource.fileNames = ['/store/data/Commissioning08/Cosmics/RECO/v1/000/066/394/229A4AEE-359B-DD11-B144-000423D99B3E.root']
 
+#Run without DAQ info in ORCOFF:
+process.PoolSource.fileNames =  ['/store/data/Commissioning08/Cosmics/RECO/v1/000/064/129/18C4DB2F-3A90-DD11-99DD-001617E30D38.root']
 
 
 process.asciiprint = cms.OutputModule("AsciiOutputModule")
 
 
-process.p = cms.Path(process.DaqData)
+process.p = cms.Path(process.dqmDaqInfo)
 process.ep = cms.EndPath(process.asciiprint)
 
