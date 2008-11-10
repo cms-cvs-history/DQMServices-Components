@@ -1,9 +1,6 @@
 
 module DaqData =  DQMDaqInfo{
  untracked bool saveDCFile  = true 
- untracked bool FedGranularityInput = false
  string outputFile = "dqmDaqInfo.txt"
- bool saveRootFile = true
- string OutputFileName = "DQMDAQDataCert.root"
 
 }
