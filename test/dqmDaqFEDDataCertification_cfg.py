@@ -3,7 +3,6 @@ import FWCore.ParameterSet.Config as cms
 process = cms.Process("DataCert")
 process.load("DQMServices.Components.DQMDaqInfo_cfi")
 
-process.dqmDaqInfo.saveDCFile = True
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring('file:/tmp/segoni/FileFromRun648148.root')
@@ -29,16 +28,15 @@ process.DQMStore = cms.Service("DQMStore",
 
 
 
-#process.load("CondCore.DBCommon.CondDBCommon_cfi")
-#process.CondDBCommon.connect = 'oracle://cms_orcoff_prod/CMS_COND_21X_RUN_INFO'
-#process.CondDBCommon.DBParameters.authenticationPath = '/afs/cern.ch/cms/DB/conddb/'
-
 
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.GlobalTag.connect = "sqlite_file:/afs/cern.ch/user/m/malgeri/public/globtag/DQMTEST.db"
 process.GlobalTag.globaltag = "DQMTEST::All"
 process.prefer("GlobalTag")
 
+#process.load("CondCore.DBCommon.CondDBCommon_cfi")
+#process.CondDBCommon.connect = 'oracle://cms_orcoff_prod/CMS_COND_21X_RUN_INFO'
+#process.CondDBCommon.DBParameters.authenticationPath = '/afs/cern.ch/cms/DB/conddb/'
 #process.rn = cms.ESSource("PoolDBESSource",
 #    process.CondDBCommon,
 #    timetype = cms.string('runnumber'),
@@ -53,7 +51,7 @@ process.dqmSaver = cms.EDFilter("DQMFileSaver",
     fileName = cms.untracked.string('test'),
     saveAtRunEnd = cms.untracked.bool(True),
     dirName = cms.untracked.string('.'),
-    workflow = cms.untracked.string('/A/B/C')
+    workflow = cms.untracked.string('/test/test/test')
 )
 
 process.asciiprint = cms.OutputModule("AsciiOutputModule")

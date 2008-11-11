@@ -1,6 +1,4 @@
 
 module DaqData =  DQMDaqInfo{
- untracked bool saveDCFile  = true 
- string outputFile = "dqmDaqInfo.txt"
 
 }
