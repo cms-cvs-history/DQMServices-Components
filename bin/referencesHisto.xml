@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE RefHistos [
+<!ELEMENT RefHistos (SubDetectors)+>
+<!ELEMENT SubDetectors (ReferenceEntity)*>
+<!ATTLIST SubDetectors name     CDATA #REQUIRED 
+                       category CDATA #REQUIRED 
+                       source   CDATA #REQUIRED>
+<!ELEMENT ReferenceEntity EMPTY>
+<!ATTLIST ReferenceEntity name CDATA #REQUIRED>
+]>
+
+<RefHistos>
+<!--
+  <SubDetectors name="Pixel" category="Run summary" source="/home/rovere/DQM_start/reference_creation/DQM_V0001_R000067557__Cosmics__Commissioning08_CRAFT_ALL_V9_225-v2__RECO_1.root">
+    <ReferenceEntity name="Clusters/OnTrack/sizesiPixelClusters_Barrel"/>
+    <ReferenceEntity name="Clusters/OnTrack/size_siPixelClusters_Endcap"/>
+  </SubDetectors>
+
+  <SubDetectors name="EcalBarrel" category="Run summary" source="/home/rovere/DQM_start/reference_creation/DQM_V0001_R000067557__Cosmics__Commissioning08_CRAFT_ALL_V9_225-v2__RECO_1.root">
+    <ReferenceEntity name="EBSummaryClient/EBOT digi occupancy summary 1D"/>
+  </SubDetectors>
+
+  <SubDetectors name="SiStrip" category="Run summary" source="/home/rovere/DQM_start/reference_creation/DQM_V0001_R000069522__Cosmics__Commissioning08_CRAFT_ALL_V9_225-v2__RECO_1.root">
+    <ReferenceEntity name="MechanicalView/TOB/Summary_.*"/>
+  </SubDetectors>
+
+  <SubDetectors name="SiStrip" category="Run summary" source="/home/rovere/DQM_start/reference_creation/DQM_V0001_SiStrip_R000070681_T00000032.root">
+    <ReferenceEntity name="MechanicalView/TOB/Summary_TotalNumberOfClusters_OnTrack_in_TOB"/>
+    <ReferenceEntity name="MechanicalView/TOB/Summary_MeanNumberOfDigis__TOB"/>
+    <ReferenceEntity name="MechanicalView/TOB/Summary_MeanNumberOfClusters__TOB"/>
+    <ReferenceEntity name="MechanicalView/TOB/Summary_MeanClusterWidth__TOB"/>
+  </SubDetectors>
+-->
+  <SubDetectors name="CaloTowersV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="DTCalib" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="EcalClusterV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="EcalDigisV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="EcalHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="EcalRecHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="GlobalDigisV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="GlobalHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="GlobalRecHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="HLT" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="HcalHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="HcalRecHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="MixingV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="MuAlCalIsolatedMu" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="MuonCSCDigisV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="MuonDTDigisV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="MuonDTHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="MuonIdentificationV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="MuonIsolationV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="RPCDigisVV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="RecoMuonV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="RecoTrackV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="TrackerDigisV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="TrackerHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="TrackerRecHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+  <SubDetectors name="TrackingMCTruthV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
+</RefHistos>
