@@ -4,8 +4,8 @@
  *
  * DQM FED Client
  *
- * $Date: 2009/06/03 09:42:07 $
- * $Revision: 1.4 $
+ * $Date: 2008/11/15 15:44:50 $
+ * $Revision: 1.3 $
  * \author  M. Marienfeld
  *
 */
@@ -56,14 +56,14 @@ private:
 
   int   NBINS;
   float XMIN, XMAX;
-  float SummaryContent[10];
+  float SummaryContent[11];
 
   MonitorElement * FedEntries;
   MonitorElement * FedFatal;
   MonitorElement * FedNonFatal;
 
   MonitorElement * reportSummary;
-  MonitorElement * reportSummaryContent[10];
+  MonitorElement * reportSummaryContent[11];
   MonitorElement * reportSummaryMap;
 
   bool fillInEventloop;
