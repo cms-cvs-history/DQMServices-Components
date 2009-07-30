@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE RefHistos [
-<!ELEMENT RefHistos (SubDetectors)+>
-<!ELEMENT SubDetectors (ReferenceEntity)*>
-<!ATTLIST SubDetectors name     CDATA #REQUIRED 
-                       category CDATA #REQUIRED 
-                       source   CDATA #REQUIRED>
-<!ELEMENT ReferenceEntity EMPTY>
-<!ATTLIST ReferenceEntity name CDATA #REQUIRED>
-]>
+<!DOCTYPE RefHistos  SYSTEM "referenceHisto.dtd"> 
 
-<RefHistos>
+<RefHistos DataSetName="Cosmic" SoftwareVersion="CMSSW_3_1_1" GlobalTag="CRAFT_ALL_V1">
+
+  <MetaData destDB="fake" tag="fake" since="fake"/>
+
+  <SubDetectors name="Pixel" category="Run summary" source="/home/rovere/DQM_start/CMSSW_3_1_1/src/CondTools/DQM/test/DQM_V0001_R000000001__Global__CMSSW_X_Y_Z__RECO.root">
+    <ReferenceEntity name=".*"/>
+  </SubDetectors>
+
 <!--
   <SubDetectors name="Pixel" category="Run summary" source="/home/rovere/DQM_start/reference_creation/DQM_V0001_R000067557__Cosmics__Commissioning08_CRAFT_ALL_V9_225-v2__RECO_1.root">
     <ReferenceEntity name="Clusters/OnTrack/sizesiPixelClusters_Barrel"/>
@@ -30,7 +29,7 @@
     <ReferenceEntity name="MechanicalView/TOB/Summary_MeanNumberOfClusters__TOB"/>
     <ReferenceEntity name="MechanicalView/TOB/Summary_MeanClusterWidth__TOB"/>
   </SubDetectors>
--->
+
   <SubDetectors name="CaloTowersV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
     <ReferenceEntity name=".*"/>
   </SubDetectors>
@@ -134,5 +133,6 @@
   <SubDetectors name="TrackingMCTruthV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
     <ReferenceEntity name=".*"/>
   </SubDetectors>
+-->
 
 </RefHistos>

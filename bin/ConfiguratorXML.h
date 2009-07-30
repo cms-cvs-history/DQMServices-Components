@@ -35,6 +35,8 @@ class ConfiguratorXML : public Configurator
  public:
   virtual void getHistosToFetch(std::vector<std::string> & ) ;
   virtual void  getHistosToFetchAndSource(std::map<std::string, std::vector<std::string> > &) ;
+  virtual std::string getDatasetAndSoftwareVersionAndTag() ;
+  virtual void getMetadataInfo(std::vector<std::pair<std::string, std::string> > & metainfo) ;
   virtual ~ConfiguratorXML() ; 
  private:
   ConfiguratorXML(std::string) ;
@@ -73,6 +75,7 @@ class DOMTreeErrorReporter : public ErrorHandler
 		<< "\", line " << toCatch.getLineNumber()
 		<< ", column " << toCatch.getColumnNumber()
 		<< "\n" << mthn << "Message: " << XMLString::transcode(toCatch.getMessage()) << std::endl;
+      exit(-1) ;
     }
   void error(const SAXParseException& toCatch) {warning(toCatch) ;}
   void fatalError(const SAXParseException& toCatch){warning(toCatch);};

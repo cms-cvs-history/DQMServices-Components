@@ -5,6 +5,7 @@
 #include "DQMServices/Core/interface/DQMStore.h"
 #include "DQMServices/Core/interface/MonitorElement.h"
 #include <iostream>
+#include <fstream>
 
 #include <errno.h>
 #include <sys/types.h>
@@ -47,10 +48,10 @@ int main(int argc, char **argv)
   DQMStore store(emptyps);
   store.setVerbose(0) ;
 
-  Configurator * cfg = new Configurator(cfgfile) ;
+  Configurator cfg(cfgfile) ;
   //   std::vector<std::string>  refHistos = cfg->getHistosToFetch() ;
   std::map<std::string, std::vector<std::string> > refHistosAndSource ;
-  cfg->getHistosToFetchAndSource( refHistosAndSource ) ;
+  cfg.getHistosToFetchAndSource( refHistosAndSource ) ;
 
   std::map<std::string, std::vector<std::string> >::iterator i = refHistosAndSource.begin() ;
   std::map<std::string, std::vector<std::string> >::iterator e = refHistosAndSource.end() ;
@@ -89,7 +90,7 @@ int main(int argc, char **argv)
 		      boost::smatch what;
 		      if(boost::regex_match(thisHisto, what, rge))
 			{
-			  std::cout << "I've got a match on" << thisHisto  << " and " << refHistos[j] << std::endl ;
+			  std::cout << "I've got a match on " << thisHisto  << " and " << refHistos[j] << std::endl ;
 			  remove = false ;
 			  toKeepFromPreviousSource.push_back(allHistos[k]) ;
 			  break ;
@@ -123,11 +124,36 @@ int main(int argc, char **argv)
 	  exit(1);
 	}
     }
+
+  // Compose the correct output file name, with DataSet and 
+  // SoftwareVersion as specified into the XML configuration file
+  std::string completeOutputFileName(output) ;
+  std::string toBeAppended(cfg.getDatasetAndSoftwareVersionAndTag()) ;
+  toBeAppended += ".root" ;
+  completeOutputFileName.replace(completeOutputFileName.find(".root"), toBeAppended.length(), toBeAppended) ;
   std::vector<MonitorElement*> toBeSaved = store.getAllContents("") ;
   unsigned int total = toBeSaved.size() ;
   for(unsigned int j = 0 ; j < total ; ++j)
     std::cout << toBeSaved[j]->getFullname() << std::endl ;
-  store.save(output);
+  store.save(completeOutputFileName.c_str());
+  
+  std::vector<std::pair< std::string, std::string> > metainfo ;
+  cfg.getMetadataInfo(metainfo) ;
+  std::vector<std::pair<std::string, std::string> >::iterator it  = metainfo.begin() ;
+  std::vector<std::pair<std::string, std::string> >::iterator ite = metainfo.end() ;
+
+  std::string metaOutputFileName(completeOutputFileName) ;
+  metaOutputFileName.replace(metaOutputFileName.find(".root"), metaOutputFileName.length(), ".txt") ;
+  std::ofstream metaos(metaOutputFileName.c_str()) ;
+  if(!metaos)
+    {
+      std::cout << "Error opening " << metaOutputFileName << std::endl ;
+      exit(1) ;
+    }
+  for(; it != ite ; ++it)
+    metaos << it->first << "=" << it->second << std::endl ;
+  
+  metaos.close() ;
 
   return 0;
 }
