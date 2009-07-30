@@ -1,0 +1,33 @@
+<!ELEMENT RefHistos (MetaData+,SubDetectors+)>
+<!ATTLIST RefHistos DataSetName     CDATA #REQUIRED
+                    SoftwareVersion CDATA #REQUIRED
+                    GlobalTag       (
+                                     CRAFT_0T      |
+                                     CRAFT_ALL_V1  | 
+                                     CRAFT_ALL_V2  |
+                                     CRAFT_ALL_V3  |
+                                     CRAFT_ALL_V4  |
+                                     CRAFT_ALL_V5  | 
+                                     CRAFT_ALL_V6  |
+                                     CRAFT_ALL_V7  |
+                                     CRAFT_ALL_V8  |
+                                     CRAFT_ALL_V9  |
+                                     CRAFT_ALL_V10 |
+                                     CRAFT_ALL_V11 |
+                                     CRAFT_ALL_V12 |
+                                     CRAFT_ALL_V13 
+                                     ) #REQUIRED>
+<!ELEMENT MetaData EMPTY>
+<!ATTLIST MetaData destDB    CDATA #REQUIRED 
+                   tag       CDATA #REQUIRED
+                   since     CDATA #REQUIRED 
+                   inputtag  CDATA #IMPLIED
+                   till      CDATA #IMPLIED 
+                   usertex   CDATA #IMPLIED>
+<!ELEMENT SubDetectors (ReferenceEntity)*>
+<!ATTLIST SubDetectors name     CDATA #REQUIRED 
+                       category CDATA #REQUIRED 
+                       source   CDATA #REQUIRED>
+<!ELEMENT ReferenceEntity EMPTY>
+<!ATTLIST ReferenceEntity name CDATA #REQUIRED>
+
