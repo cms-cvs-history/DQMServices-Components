@@ -35,8 +35,11 @@ int main(int argc, char **argv)
       return 1;
     }
 
+  std::string rootOutputFile(output) ;
+  if(rootOutputFile.find(".root") == std::string::npos)
+    rootOutputFile += ".root" ;
   std::cout << "\nUsing     Config file: " << cfgfile 
-	    << "\nUsing Output     file: " << output 
+	    << "\nUsing Output     file: " << rootOutputFile 
 	    << std::endl ;
 
   // Process each file given as argument.
@@ -127,22 +130,23 @@ int main(int argc, char **argv)
 
   // Compose the correct output file name, with DataSet and 
   // SoftwareVersion as specified into the XML configuration file
-  std::string completeOutputFileName(output) ;
   std::string toBeAppended(cfg.getDatasetAndSoftwareVersionAndTag()) ;
   toBeAppended += ".root" ;
-  completeOutputFileName.replace(completeOutputFileName.find(".root"), toBeAppended.length(), toBeAppended) ;
+  rootOutputFile.replace(rootOutputFile.find(".root"), toBeAppended.length(), toBeAppended) ;
   std::vector<MonitorElement*> toBeSaved = store.getAllContents("") ;
   unsigned int total = toBeSaved.size() ;
   for(unsigned int j = 0 ; j < total ; ++j)
     std::cout << toBeSaved[j]->getFullname() << std::endl ;
-  store.save(completeOutputFileName.c_str());
+
+  DQMStore::SaveReferenceTag ref = DQMStore::SaveWithoutReference ;
+  store.save(rootOutputFile.c_str(), "", "", "", ref);
   
   std::vector<std::pair< std::string, std::string> > metainfo ;
   cfg.getMetadataInfo(metainfo) ;
   std::vector<std::pair<std::string, std::string> >::iterator it  = metainfo.begin() ;
   std::vector<std::pair<std::string, std::string> >::iterator ite = metainfo.end() ;
 
-  std::string metaOutputFileName(completeOutputFileName) ;
+  std::string metaOutputFileName(rootOutputFile) ;
   metaOutputFileName.replace(metaOutputFileName.find(".root"), metaOutputFileName.length(), ".txt") ;
   std::ofstream metaos(metaOutputFileName.c_str()) ;
   if(!metaos)
@@ -151,7 +155,7 @@ int main(int argc, char **argv)
       exit(1) ;
     }
   for(; it != ite ; ++it)
-    metaos << it->first << "=" << it->second << std::endl ;
+    metaos << it->first << " " << it->second << std::endl ;
   
   metaos.close() ;
 
