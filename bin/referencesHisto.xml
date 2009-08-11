@@ -1,138 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE RefHistos  SYSTEM "referenceHisto.dtd"> 
 
-<RefHistos DataSetName="Cosmic" SoftwareVersion="CMSSW_3_1_1" GlobalTag="CRAFT_ALL_V1">
+<RefHistos DataSetName="Cosmic" SoftwareVersion="CMSSW_3_2_3" GlobalTag="GR09_P_V1">
 
-  <MetaData destDB="fake" tag="fake" since="fake"/>
+  <MetaData destDB="fake" tag="Cosmic" since="1"/>
 
-  <SubDetectors name="Pixel" category="Run summary" source="/home/rovere/DQM_start/CMSSW_3_1_1/src/CondTools/DQM/test/DQM_V0001_R000000001__Global__CMSSW_X_Y_Z__RECO.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-<!--
-  <SubDetectors name="Pixel" category="Run summary" source="/home/rovere/DQM_start/reference_creation/DQM_V0001_R000067557__Cosmics__Commissioning08_CRAFT_ALL_V9_225-v2__RECO_1.root">
-    <ReferenceEntity name="Clusters/OnTrack/sizesiPixelClusters_Barrel"/>
-    <ReferenceEntity name="Clusters/OnTrack/size_siPixelClusters_Endcap"/>
-  </SubDetectors>
-
-  <SubDetectors name="EcalBarrel" category="Run summary" source="/home/rovere/DQM_start/reference_creation/DQM_V0001_R000067557__Cosmics__Commissioning08_CRAFT_ALL_V9_225-v2__RECO_1.root">
-    <ReferenceEntity name="EBSummaryClient/EBOT digi occupancy summary 1D"/>
-  </SubDetectors>
-
-  <SubDetectors name="SiStrip" category="Run summary" source="/home/rovere/DQM_start/reference_creation/DQM_V0001_R000069522__Cosmics__Commissioning08_CRAFT_ALL_V9_225-v2__RECO_1.root">
-    <ReferenceEntity name="MechanicalView/TOB/Summary_.*"/>
-  </SubDetectors>
-
-  <SubDetectors name="SiStrip" category="Run summary" source="/home/rovere/DQM_start/reference_creation/DQM_V0001_SiStrip_R000070681_T00000032.root">
+  <SubDetectors name="SiStrip" category="Run summary" source="/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/data/PromptReco/110/397/DQM_V0001_R000110397__Cosmics__CRAFT09-PromptReco-v1__RECO.root">
+    <!-- FED Monitoring -->
+    <ReferenceEntity name="ReadoutView/FedMonitoringSummary/BadActiveChannelStatusBits"/>
+    <ReferenceEntity name="ReadoutView/FedMonitoringSummary/BadChannelStatusBits"/>
+    <ReferenceEntity name="ReadoutView/FedMonitoringSummary/AnyFEDErrors"/>
+    <ReferenceEntity name="ReadoutView/FedMonitoringSummary/nUnlocked"/>
+    <ReferenceEntity name="ReadoutView/FedMonitoringSummary/nOutOfSync"/>
+    <ReferenceEntity name="ReadoutView/FedMonitoringSummary/nAPVAddressError"/>
+    <ReferenceEntity name="ReadoutView/FedMonitoringSummary/AnyDAQProblems"/>
+    <ReferenceEntity name="ReadoutView/FedMonitoringSummary/AnyFEProblems"/>
+    <ReferenceEntity name="ReadoutView/FedMonitoringSummary/FEOverflows"/>
+    <ReferenceEntity name="ReadoutView/FedMonitoringSummary/FEMissing"/> 
+    <ReferenceEntity name="ReadoutView/FedMonitoringSummary/DataMissing"/>
+    <!-- Cluster Properties -->
+    <ReferenceEntity name="MechanicalView/TIB/Summary_ClusterStoNCorr_OnTrack_in_TIB"/>
+    <ReferenceEntity name="MechanicalView/TOB/Summary_ClusterStoNCorr_OnTrack_in_TOB"/>
+    <ReferenceEntity name="MechanicalView/TID/Summary_ClusterStoNCorr_OnTrack_in_TID"/>
+    <ReferenceEntity name="MechanicalView/TEC/Summary_ClusterStoNCorr_OnTrack_in_TEC"/>
+    <ReferenceEntity name="MechanicalView/TIB/Summary_TotalNumberOfClusters_OffTrack_in_TIB"/>
+    <ReferenceEntity name="MechanicalView/TOB/Summary_TotalNumberOfClusters_OffTrack_in_TOB"/>
+    <ReferenceEntity name="MechanicalView/TID/Summary_TotalNumberOfClusters_OffTrack_in_TID"/>
+    <ReferenceEntity name="MechanicalView/TEC/Summary_TotalNumberOfClusters_OffTrack_in_TEC"/>
+    <ReferenceEntity name="MechanicalView/TIB/Summary_TotalNumberOfClusters_OnTrack_in_TIB"/>
     <ReferenceEntity name="MechanicalView/TOB/Summary_TotalNumberOfClusters_OnTrack_in_TOB"/>
-    <ReferenceEntity name="MechanicalView/TOB/Summary_MeanNumberOfDigis__TOB"/>
-    <ReferenceEntity name="MechanicalView/TOB/Summary_MeanNumberOfClusters__TOB"/>
-    <ReferenceEntity name="MechanicalView/TOB/Summary_MeanClusterWidth__TOB"/>
+    <ReferenceEntity name="MechanicalView/TID/Summary_TotalNumberOfClusters_OnTrack_in_TID"/>
+    <ReferenceEntity name="MechanicalView/TEC/Summary_TotalNumberOfClusters_OnTrack_in_TEC"/>
+    <ReferenceEntity name="MechanicalView/TIB/Summary_ClusterCharge_OffTrack_in_TIB"/>
+    <ReferenceEntity name="MechanicalView/TOB/Summary_ClusterCharge_OffTrack_in_TOB"/>
+    <ReferenceEntity name="MechanicalView/TID/Summary_ClusterCharge_OffTrack_in_TID"/>
+    <ReferenceEntity name="MechanicalView/TEC/Summary_ClusterCharge_OffTrack_in_TEC"/>
+    <ReferenceEntity name="MechanicalView/TIB/Summary_ClusterNoise_OnTrack_in_TIB"/>
+    <ReferenceEntity name="MechanicalView/TOB/Summary_ClusterNoise_OnTrack_in_TOB"/>
+    <ReferenceEntity name="MechanicalView/TID/Summary_ClusterNoise_OnTrack_in_TID"/>
+    <ReferenceEntity name="MechanicalView/TEC/Summary_ClusterNoise_OnTrack_in_TEC"/>
+    <ReferenceEntity name="MechanicalView/TIB/Summary_ClusterNoise_OffTrack_in_TIB"/>
+    <ReferenceEntity name="MechanicalView/TOB/Summary_ClusterNoise_OffTrack_in_TOB"/>
+    <ReferenceEntity name="MechanicalView/TID/Summary_ClusterNoise_OffTrack_in_TID"/>
+    <ReferenceEntity name="MechanicalView/TEC/Summary_ClusterNoise_OffTrack_in_TEC"/>
+    <ReferenceEntity name="MechanicalView/TIB/layer_1/Summary_ClusterStoNCorr__OnTrack__TIB__layer__1"/>
+    <ReferenceEntity name="MechanicalView/TIB/layer_2/Summary_ClusterStoNCorr__OnTrack__TIB__layer__2"/>
+    <ReferenceEntity name="MechanicalView/TIB/layer_3/Summary_ClusterStoNCorr__OnTrack__TIB__layer__3"/>
+    <ReferenceEntity name="MechanicalView/TIB/layer_4/Summary_ClusterStoNCorr__OnTrack__TIB__layer__4"/>
+    <ReferenceEntity name="MechanicalView/TID/side_2/wheel_1/Summary_ClusterStoNCorr__OnTrack__TID__side__2__wheel__1"/>
+    <ReferenceEntity name="MechanicalView/TID/side_2/wheel_2/Summary_ClusterStoNCorr__OnTrack__TID__side__2__wheel__2"/>
+    <ReferenceEntity name="MechanicalView/TID/side_2/wheel_3/Summary_ClusterStoNCorr__OnTrack__TID__side__2__wheel__3"/>
+    <ReferenceEntity name="MechanicalView/TID/side_1/wheel_1/Summary_ClusterStoNCorr__OnTrack__TID__side__1__wheel__1"/>
+    <ReferenceEntity name="MechanicalView/TID/side_1/wheel_2/Summary_ClusterStoNCorr__OnTrack__TID__side__1__wheel__2"/>
+    <ReferenceEntity name="MechanicalView/TID/side_1/wheel_3/Summary_ClusterStoNCorr__OnTrack__TID__side__1__wheel__3"/>
+    <ReferenceEntity name="MechanicalView/TOB/layer_1/Summary_ClusterStoNCorr__OnTrack__TOB__layer__1"/>
+    <ReferenceEntity name="MechanicalView/TOB/layer_2/Summary_ClusterStoNCorr__OnTrack__TOB__layer__2"/>
+    <ReferenceEntity name="MechanicalView/TOB/layer_3/Summary_ClusterStoNCorr__OnTrack__TOB__layer__3"/>
+    <ReferenceEntity name="MechanicalView/TOB/layer_4/Summary_ClusterStoNCorr__OnTrack__TOB__layer__4"/>
+    <ReferenceEntity name="MechanicalView/TOB/layer_5/Summary_ClusterStoNCorr__OnTrack__TOB__layer__5"/>
+    <ReferenceEntity name="MechanicalView/TOB/layer_6/Summary_ClusterStoNCorr__OnTrack__TOB__layer__6"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_2/wheel_1/Summary_ClusterStoNCorr__OnTrack__TEC__side__2__wheel__1"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_2/wheel_2/Summary_ClusterStoNCorr__OnTrack__TEC__side__2__wheel__2"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_2/wheel_3/Summary_ClusterStoNCorr__OnTrack__TEC__side__2__wheel__3"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_2/wheel_4/Summary_ClusterStoNCorr__OnTrack__TEC__side__2__wheel__4"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_2/wheel_5/Summary_ClusterStoNCorr__OnTrack__TEC__side__2__wheel__5"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_2/wheel_6/Summary_ClusterStoNCorr__OnTrack__TEC__side__2__wheel__6"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_2/wheel_7/Summary_ClusterStoNCorr__OnTrack__TEC__side__2__wheel__7"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_2/wheel_8/Summary_ClusterStoNCorr__OnTrack__TEC__side__2__wheel__8"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_2/wheel_9/Summary_ClusterStoNCorr__OnTrack__TEC__side__2__wheel__9"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_1/wheel_1/Summary_ClusterStoNCorr__OnTrack__TEC__side__1__wheel__1"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_1/wheel_2/Summary_ClusterStoNCorr__OnTrack__TEC__side__1__wheel__2"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_1/wheel_3/Summary_ClusterStoNCorr__OnTrack__TEC__side__1__wheel__3"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_1/wheel_4/Summary_ClusterStoNCorr__OnTrack__TEC__side__1__wheel__4"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_1/wheel_5/Summary_ClusterStoNCorr__OnTrack__TEC__side__1__wheel__5"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_1/wheel_6/Summary_ClusterStoNCorr__OnTrack__TEC__side__1__wheel__6"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_1/wheel_7/Summary_ClusterStoNCorr__OnTrack__TEC__side__1__wheel__7"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_1/wheel_8/Summary_ClusterStoNCorr__OnTrack__TEC__side__1__wheel__8"/>
+    <ReferenceEntity name="MechanicalView/TEC/side_1/wheel_9/Summary_ClusterStoNCorr__OnTrack__TEC__side__1__wheel__9"/>
   </SubDetectors>
-
-  <SubDetectors name="CaloTowersV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
+  <SubDetectors name="Tracking" category="Run summary" source="/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/data/PromptReco/110/397/DQM_V0001_R000110397__Cosmics__CRAFT09-PromptReco-v1__RECO.root">
+    <!-- Track Parameters -->
+    <ReferenceEntity name="TrackParameters/NumberOfTracks_CKFTk"/>
+    <ReferenceEntity name="TrackParameters/NumberOfRecHitsPerTrack_CKFTk"/>
+    <ReferenceEntity name="TrackParameters/TrackPt_CKFTk"/>
+    <ReferenceEntity name="TrackParameters/Chi2overDoF_CKFTk"/>
+    <ReferenceEntity name="TrackParameters/TrackPhi_CKFTk"/>
+    <ReferenceEntity name="TrackParameters/TrackEta_CKFTk"/>
+    <ReferenceEntity name="TrackParameters/NumberOfTracks_CosmicTk"/>
+    <ReferenceEntity name="TrackParameters/NumberOfRecHitsPerTrack_CosmicTk"/>
+    <ReferenceEntity name="TrackParameters/TrackPt_CosmicTk"/>
+    <ReferenceEntity name="TrackParameters/Chi2overDoF_CosmicTk"/>
+    <ReferenceEntity name="TrackParameters/TrackPhi_CosmicTk"/>
+    <ReferenceEntity name="TrackParameters/TrackEta_CosmicTk"/>
+    <ReferenceEntity name="TrackParameters/NumberOfTracks_RSTk"/>
+    <ReferenceEntity name="TrackParameters/NumberOfRecHitsPerTrack_RSTk"/>
+    <ReferenceEntity name="TrackParameters/TrackPt_RSTk"/>
+    <ReferenceEntity name="TrackParameters/Chi2overDoF_RSTk"/>
+    <ReferenceEntity name="TrackParameters/TrackPhi_RSTk"/>
+    <ReferenceEntity name="TrackParameters/TrackEta_RSTk"/>
   </SubDetectors>
-
-  <SubDetectors name="DTCalib" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="EcalClusterV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="EcalDigisV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="EcalHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="EcalRecHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="GlobalDigisV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="GlobalHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="GlobalRecHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="HLT" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="HcalHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="HcalRecHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="MixingV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="MuAlCalIsolatedMu" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="MuonCSCDigisV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="MuonDTDigisV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="MuonDTHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="MuonIdentificationV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="MuonIsolationV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="RPCDigisVV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="RecoMuonV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="RecoTrackV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="TrackerDigisV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="TrackerHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="TrackerRecHitsV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
-
-  <SubDetectors name="TrackingMCTruthV" category="Run summary" source="rfio:/castor/cern.ch/user/m/malgeri/stdval_newtags_cj_harvest.root">
-    <ReferenceEntity name=".*"/>
-  </SubDetectors>
--->
 
 </RefHistos>
