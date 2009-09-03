@@ -30,11 +30,12 @@
                    since     CDATA #REQUIRED 
                    inputtag  CDATA #IMPLIED
                    till      CDATA #IMPLIED 
-                   usertex   CDATA #IMPLIED>
+                   usertext  CDATA #IMPLIED>
 <!ELEMENT SubDetectors (ReferenceEntity)*>
 <!ATTLIST SubDetectors name     CDATA #REQUIRED 
                        category CDATA #REQUIRED 
                        source   CDATA #REQUIRED>
 <!ELEMENT ReferenceEntity EMPTY>
 <!ATTLIST ReferenceEntity name CDATA #REQUIRED>
-
+<!ENTITY SiStrips SYSTEM "SiStrips.xml">
+<!ENTITY Pixels   SYSTEM "Pixels.xml">

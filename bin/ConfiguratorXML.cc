@@ -258,7 +258,7 @@ void ConfiguratorXML::getMetadataInfo(std::vector<std::pair<std::string,std::str
   metaAttributes.push_back("since") ;
   metaAttributes.push_back("inputtag") ;
   metaAttributes.push_back("till") ;
-  metaAttributes.push_back("usertex") ;
+  metaAttributes.push_back("usertext") ;
   
   std::vector<std::string>::iterator it  = metaAttributes.begin() ;
   std::vector<std::string>::iterator ite = metaAttributes.end() ;
