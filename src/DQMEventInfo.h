@@ -4,8 +4,8 @@
 /*
  * \file DQMEventInfo.h
  *
- * $Date: 2008/03/04 22:29:06 $
- * $Revision: 1.10 $
+ * $Date: 2008/07/06 17:32:30 $
+ * $Revision: 1.11 $
  * \author M. Zanetti - INFN Padova
  *
 */
@@ -73,19 +73,14 @@ private:
   ///These MEs are either static or updated upon each analyze() call
   //////////////////////////////////////////////////////////////////
   MonitorElement * nUpdates_;          ///Number of collector updates (TBD)
-  MonitorElement * processId_;         ///The PID associated with this job
   MonitorElement * processStartTimeStamp_; ///The UTC time of the first event processed
   MonitorElement * processTimeStamp_;  ///The UTC time of the last event
   MonitorElement * processLatency_;    ///Time elapsed since the last event
   MonitorElement * processEventRate_;  ///Avg # of events in programmable window (default: 5 min)
   MonitorElement * processEvents_;     ///# of event processed so far
-  MonitorElement * hostName_;          ///Hostname of the local machine
-  MonitorElement * processName_;       ///DQM "name" of the job (eg, Hcal or DT)
-  MonitorElement * workingDir_;        ///Current working directory of the job
-  MonitorElement * cmsswVer_;          ///CMSSW version run for this job
-  MonitorElement * dqmPatch_;          ///DQM patch version for this job
+  MonitorElement * processName_;       ///name of subsystem
   MonitorElement * errSummary_;        ///Subdetector-specific error summary (float)
-  MonitorElement * errSummaryEtaPhi_;     ///Subdetector-specific etaPhi summary (float)
+  MonitorElement * errSummaryEtaPhi_;  ///Subdetector-specific etaPhi summary (float)
   MonitorElement * errSummarySegment_[10];
 };
 

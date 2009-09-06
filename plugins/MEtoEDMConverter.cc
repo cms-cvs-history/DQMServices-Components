@@ -3,8 +3,8 @@
  *  
  *  See header file for description of class
  *
- *  $Date: 2009/07/21 17:49:21 $
- *  $Revision: 1.22 $
+ *  $Date: 2009/07/29 19:24:39 $
+ *  $Revision: 1.23 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -49,6 +49,7 @@ MEtoEDMConverter::MEtoEDMConverter(const edm::ParameterSet & iPSet) :
   // create persistent objects
   produces<MEtoEDM<TH1F>, edm::InRun>(fName);
   produces<MEtoEDM<TH1S>, edm::InRun>(fName);
+  produces<MEtoEDM<TH1D>, edm::InRun>(fName);
   produces<MEtoEDM<TH2F>, edm::InRun>(fName);
   produces<MEtoEDM<TH2S>, edm::InRun>(fName);
   produces<MEtoEDM<TH3F>, edm::InRun>(fName);
@@ -80,13 +81,14 @@ MEtoEDMConverter::endJob(void)
   std::map<std::string,int> packages; // keep track just of package names
   unsigned nTH1F = 0; // count various objects we have
   unsigned nTH1S = 0;
+  unsigned nTH1D = 0;
   unsigned nTH2F = 0;
   unsigned nTH2S = 0;
   unsigned nTH3F = 0;
   unsigned nTProfile = 0;
   unsigned nTProfile2D = 0;
-  unsigned nFloat = 0;
-  unsigned nInt = 0;
+  unsigned nDouble = 0;
+  unsigned nInt64 = 0;
   unsigned nString = 0;
 
   if (verbosity > 1) std::cout << std::endl << "Summary :" << std::endl;
@@ -106,15 +108,15 @@ MEtoEDMConverter::endJob(void)
     switch (me->kind())
     {
     case MonitorElement::DQM_KIND_INT:
-      ++nInt;
+      ++nInt64;
       if (verbosity > 1)
-	std::cout << "   scalar: " << tobj->GetName() << ": Int\n";
+	std::cout << "   scalar: " << tobj->GetName() << ": Int64\n";
       break;
 
     case MonitorElement::DQM_KIND_REAL:
-      ++nFloat;
+      ++nDouble;
       if (verbosity > 1)
-	std::cout << "   scalar: " << tobj->GetName() << ": Float\n";
+	std::cout << "   scalar: " << tobj->GetName() << ": Double\n";
       break;
 
     case MonitorElement::DQM_KIND_STRING:
@@ -133,6 +135,12 @@ MEtoEDMConverter::endJob(void)
       ++nTH1S;
       if (verbosity > 1)
 	std::cout << "   normal: " << tobj->GetName() << ": TH1S\n";
+      break;
+
+    case MonitorElement::DQM_KIND_TH1D:
+      ++nTH1D;
+      if (verbosity > 1)
+	std::cout << "   normal: " << tobj->GetName() << ": TH1D\n";
       break;
 
     case MonitorElement::DQM_KIND_TH2F:
@@ -184,14 +192,14 @@ MEtoEDMConverter::endJob(void)
 
     std::cout << "We have " << nTH1F << " TH1F objects" << std::endl;
     std::cout << "We have " << nTH1S << " TH1S objects" << std::endl;
+    std::cout << "We have " << nTH1D << " TH1D objects" << std::endl;
     std::cout << "We have " << nTH2F << " TH2F objects" << std::endl;
     std::cout << "We have " << nTH2S << " TH2S objects" << std::endl;
     std::cout << "We have " << nTH3F << " TH3F objects" << std::endl;
     std::cout << "We have " << nTProfile << " TProfile objects" << std::endl;
-    std::cout << "We have " << nTProfile2D << " TProfile2D objects" 
-	      << std::endl;
-    std::cout << "We have " << nFloat << " Float objects" << std::endl;
-    std::cout << "We have " << nInt << " Int objects" << std::endl;
+    std::cout << "We have " << nTProfile2D << " TProfile2D objects" << std::endl;
+    std::cout << "We have " << nDouble << " Float objects" << std::endl;
+    std::cout << "We have " << nInt64 << " Int objects" << std::endl;
     std::cout << "We have " << nString << " String objects" << std::endl;
   }
 
@@ -249,6 +257,10 @@ MEtoEDMConverter::beginRun(edm::Run& iRun, const edm::EventSetup& iSetup)
       me->Reset();
       break;
 
+    case MonitorElement::DQM_KIND_TH1D:
+      me->Reset();
+      break;
+
     case MonitorElement::DQM_KIND_TH2F:
       me->Reset();
       break;
@@ -297,24 +309,25 @@ MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
   std::vector<MonitorElement *> items(dbe->getAllContents(path));
   unsigned int n1F=0;
   unsigned int n1S=0;
+  unsigned int n1D=0;
   unsigned int n2F=0;
   unsigned int n2S=0;
   unsigned int n3F=0;
   unsigned int nProf=0;
   unsigned int nProf2=0;
-  unsigned int nFloat=0;
-  unsigned int nInt=0;
+  unsigned int nDouble=0;
+  unsigned int nInt64=0;
   unsigned int nString=0;
   for (mmi = items.begin (), mme = items.end (); mmi != mme; ++mmi) {
     MonitorElement *me = *mmi;
     switch (me->kind())
     {
     case MonitorElement::DQM_KIND_INT:
-      ++nInt;
+      ++nInt64;
       break;
 
     case MonitorElement::DQM_KIND_REAL:
-      ++nFloat;
+      ++nDouble;
       break;
 
     case MonitorElement::DQM_KIND_STRING:
@@ -327,6 +340,10 @@ MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
 
     case MonitorElement::DQM_KIND_TH1S:
       ++n1S;
+      break;
+
+    case MonitorElement::DQM_KIND_TH1D:
+      ++n1D;
       break;
 
     case MonitorElement::DQM_KIND_TH2F:
@@ -358,11 +375,13 @@ MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
     }
   }
 
-  std::auto_ptr<MEtoEDM<int> > pOutInt(new MEtoEDM<int>(nInt));
-  std::auto_ptr<MEtoEDM<double> > pOutFloat(new MEtoEDM<double>(nFloat));
+//  std::auto_ptr<MEtoEDM<int64_t> > pOutInt(new MEtoEDM<int64_t>(nInt64));
+  std::auto_ptr<MEtoEDM<int> > pOutInt(new MEtoEDM<int>(nInt64));
+  std::auto_ptr<MEtoEDM<double> > pOutFloat(new MEtoEDM<double>(nDouble));
   std::auto_ptr<MEtoEDM<TString> > pOutString(new MEtoEDM<TString>(nString));
   std::auto_ptr<MEtoEDM<TH1F> > pOut1(new MEtoEDM<TH1F>(n1F));
   std::auto_ptr<MEtoEDM<TH1S> > pOut1s(new MEtoEDM<TH1S>(n1S));
+  std::auto_ptr<MEtoEDM<TH1D> > pOut1d(new MEtoEDM<TH1D>(n1D));
   std::auto_ptr<MEtoEDM<TH2F> > pOut2(new MEtoEDM<TH2F>(n2F));
   std::auto_ptr<MEtoEDM<TH2S> > pOut2s(new MEtoEDM<TH2S>(n2S));
   std::auto_ptr<MEtoEDM<TH3F> > pOut3(new MEtoEDM<TH3F>(n3F));
@@ -398,6 +417,11 @@ MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
 
     case MonitorElement::DQM_KIND_TH1S:
       pOut1s->putMEtoEdmObject(me->getFullname(),me->getTags(),*me->getTH1S(),
+			       release,run,datatier);
+      break;
+
+    case MonitorElement::DQM_KIND_TH1D:
+      pOut1d->putMEtoEdmObject(me->getFullname(),me->getTags(),*me->getTH1D(),
 			       release,run,datatier);
       break;
 
@@ -446,6 +470,7 @@ MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
   iRun.put(pOutString,fName);
   iRun.put(pOut1,fName);
   iRun.put(pOut1s,fName);
+  iRun.put(pOut1d,fName);
   iRun.put(pOut2,fName);
   iRun.put(pOut2s,fName);
   iRun.put(pOut3,fName);

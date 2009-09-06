@@ -63,16 +63,10 @@ DQMEventInfo::DQMEventInfo(const ParameterSet& ps){
   nUpdates_->Fill(-1);
 
   //Static Contents
-  processId_= dbe_->bookInt("processID"); 
-  processId_->Fill(gSystem->GetPid());
   processStartTimeStamp_ = dbe_->bookFloat("processStartTimeStamp");
   processStartTimeStamp_->Fill(getUTCtime(&currentTime_));
   runStartTimeStamp_ = dbe_->bookFloat("runStartTimeStamp");
-  hostName_= dbe_->bookString("hostName",gSystem->HostName());
   processName_= dbe_->bookString("processName",subsystemname);
-  workingDir_= dbe_->bookString("workingDir",gSystem->pwd());
-  cmsswVer_= dbe_->bookString("CMSSW_Version",edm::getReleaseVersion());
-//  dqmPatch_= dbe_->bookString("DQM_Patch",dbe_->getDQMPatchVersion());
  
   // Folder to be populated by sub-systems' code
   string subfolder = currentfolder + "/reportSummaryContents" ;
