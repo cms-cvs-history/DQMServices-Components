@@ -6,8 +6,8 @@
  *  Class to take dqm monitor elements and convert into a
  *  ROOT dataformat stored in Run tree of edm file
  *
- *  $Date: 2008/09/22 17:26:01 $
- *  $Revision: 1.12 $
+ *  $Date: 2009/05/04 17:46:13 $
+ *  $Revision: 1.13 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -42,8 +42,6 @@
 #include <map>
 
 #include "TString.h"
-#include "TH1F.h"
-#include "TH1S.h"
 
 #include "classlib/utils/StringList.h"
 #include "classlib/utils/StringOps.h"
@@ -82,7 +80,12 @@ class EDMtoMEConverter : public edm::EDAnalyzer
   int prescaleFactor;
 
   DQMStore *dbe;
-  std::vector<MonitorElement*> me1, me2, me3, me4, me5, me6, me7, me8;
+  std::vector<MonitorElement*> 
+              meth1f, meth1s, meth1d,
+              meth2f, meth2s, meth2d,
+	      meth3f, 
+	      metprof, metprof2d, 
+	      mefloat, meint, mestring;
 
   // release tag
   bool releaseTag;
