@@ -1,10 +1,9 @@
-
 /** \file MEtoEDMConverter.cc
  *  
  *  See header file for description of class
  *
- *  $Date: 2009/07/29 19:24:39 $
- *  $Revision: 1.23 $
+ *  $Date: 2009/09/06 12:07:14 $
+ *  $Revision: 1.23.2.1 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -52,6 +51,7 @@ MEtoEDMConverter::MEtoEDMConverter(const edm::ParameterSet & iPSet) :
   produces<MEtoEDM<TH1D>, edm::InRun>(fName);
   produces<MEtoEDM<TH2F>, edm::InRun>(fName);
   produces<MEtoEDM<TH2S>, edm::InRun>(fName);
+  produces<MEtoEDM<TH2D>, edm::InRun>(fName);
   produces<MEtoEDM<TH3F>, edm::InRun>(fName);
   produces<MEtoEDM<TProfile>, edm::InRun>(fName);
   produces<MEtoEDM<TProfile2D>, edm::InRun>(fName);
@@ -76,23 +76,13 @@ void
 MEtoEDMConverter::endJob(void)
 {
   std::string MsgLoggerCat = "MEtoEDMConverter_endJob";
-
   // information flags
   std::map<std::string,int> packages; // keep track just of package names
-  unsigned nTH1F = 0; // count various objects we have
-  unsigned nTH1S = 0;
-  unsigned nTH1D = 0;
-  unsigned nTH2F = 0;
-  unsigned nTH2S = 0;
-  unsigned nTH3F = 0;
-  unsigned nTProfile = 0;
-  unsigned nTProfile2D = 0;
-  unsigned nDouble = 0;
-  unsigned nInt64 = 0;
-  unsigned nString = 0;
+
+  unsigned nTH1F=0,nTH1S=0,nTH1D=0,nTH2F=0,nTH2S=0,nTH2D=0,nTH3F=0;
+  unsigned nTProfile=0,nTProfile2D=0,nDouble=0,nInt64=0,nString=0;
 
   if (verbosity > 1) std::cout << std::endl << "Summary :" << std::endl;
-
   // get contents out of DQM
   std::vector<MonitorElement *>::iterator mmi, mme;
   std::vector<MonitorElement *> items(dbe->getAllContents(""));
@@ -107,82 +97,29 @@ MEtoEDMConverter::endJob(void)
     TObject *tobj = me->getRootObject();
     switch (me->kind())
     {
-    case MonitorElement::DQM_KIND_INT:
-      ++nInt64;
-      if (verbosity > 1)
-	std::cout << "   scalar: " << tobj->GetName() << ": Int64\n";
-      break;
-
-    case MonitorElement::DQM_KIND_REAL:
-      ++nDouble;
-      if (verbosity > 1)
-	std::cout << "   scalar: " << tobj->GetName() << ": Double\n";
-      break;
-
-    case MonitorElement::DQM_KIND_STRING:
-      ++nString;
-      if (verbosity > 1)
-	std::cout << "   scalar: " << tobj->GetName() << ": String\n";
-      break;
-
-    case MonitorElement::DQM_KIND_TH1F:
-      ++nTH1F;
-      if (verbosity > 1)
-	std::cout << "   normal: " << tobj->GetName() << ": TH1F\n";
-      break;
-
-    case MonitorElement::DQM_KIND_TH1S:
-      ++nTH1S;
-      if (verbosity > 1)
-	std::cout << "   normal: " << tobj->GetName() << ": TH1S\n";
-      break;
-
-    case MonitorElement::DQM_KIND_TH1D:
-      ++nTH1D;
-      if (verbosity > 1)
-	std::cout << "   normal: " << tobj->GetName() << ": TH1D\n";
-      break;
-
-    case MonitorElement::DQM_KIND_TH2F:
-      ++nTH2F;
-      if (verbosity > 1)
-	std::cout << "   normal: " << tobj->GetName() << ": TH2F\n";
-      break;
-
-    case MonitorElement::DQM_KIND_TH2S:
-      ++nTH2S;
-      if (verbosity > 1)
-	std::cout << "   normal: " << tobj->GetName() << ": TH2S\n";
-      break;
-
-    case MonitorElement::DQM_KIND_TH3F:
-      ++nTH3F;
-      if (verbosity > 1)
-	std::cout << "   normal: " << tobj->GetName() << ": TH3F\n";
-      break;
-
-    case MonitorElement::DQM_KIND_TPROFILE:
-      ++nTProfile;
-      if (verbosity > 1)
-	std::cout << "   normal: " << tobj->GetName() << ": TProfile\n";
-      break;
-
-    case MonitorElement::DQM_KIND_TPROFILE2D:
-      ++nTProfile2D;
-      if (verbosity > 1)
-	std::cout << "   normal: " << tobj->GetName() << ": TProfile2D\n";
-      break;
-
-    default:
-      edm::LogError(MsgLoggerCat)
-	<< "ERROR: The DQM object '" << me->getFullname()
-	<< "' is neither a ROOT object nor a recognised "
-	<< "simple object.\n";
+      case MonitorElement::DQM_KIND_INT: ++nInt64; break;
+      case MonitorElement::DQM_KIND_REAL: ++nDouble; break;
+      case MonitorElement::DQM_KIND_STRING: ++nString; break;
+      case MonitorElement::DQM_KIND_TH1F: ++nTH1F; break;
+      case MonitorElement::DQM_KIND_TH1S: ++nTH1S; break;
+      case MonitorElement::DQM_KIND_TH1D: ++nTH1D; break;
+      case MonitorElement::DQM_KIND_TH2F: ++nTH2F; break;
+      case MonitorElement::DQM_KIND_TH2S: ++nTH2S; break;
+      case MonitorElement::DQM_KIND_TH2D: ++nTH2D; break;
+      case MonitorElement::DQM_KIND_TH3F: ++nTH3F; break;
+      case MonitorElement::DQM_KIND_TPROFILE: ++nTProfile; break;
+      case MonitorElement::DQM_KIND_TPROFILE2D: ++nTProfile2D; break;
+      default:
+        edm::LogError(MsgLoggerCat)
+	  << "ERROR: The DQM object '" << me->getFullname()
+	  << "' is neither a ROOT object nor a recognised "
+	  << "simple object.\n";
       continue;
     }
   } // end loop through monitor elements
 
-  if (verbosity) {
+  if (verbosity) 
+    {
     // list unique packages
     std::cout << "Packages accessing DQM:" << std::endl;
     std::map<std::string,int>::iterator pkgIter;
@@ -190,18 +127,19 @@ MEtoEDMConverter::endJob(void)
       std::cout << "  " << pkgIter->first << ": " << pkgIter->second 
 		<< std::endl;
 
-    std::cout << "We have " << nTH1F << " TH1F objects" << std::endl;
-    std::cout << "We have " << nTH1S << " TH1S objects" << std::endl;
-    std::cout << "We have " << nTH1D << " TH1D objects" << std::endl;
-    std::cout << "We have " << nTH2F << " TH2F objects" << std::endl;
-    std::cout << "We have " << nTH2S << " TH2S objects" << std::endl;
-    std::cout << "We have " << nTH3F << " TH3F objects" << std::endl;
-    std::cout << "We have " << nTProfile << " TProfile objects" << std::endl;
-    std::cout << "We have " << nTProfile2D << " TProfile2D objects" << std::endl;
-    std::cout << "We have " << nDouble << " Float objects" << std::endl;
-    std::cout << "We have " << nInt64 << " Int objects" << std::endl;
-    std::cout << "We have " << nString << " String objects" << std::endl;
-  }
+      std::cout << "We have " << nTH1F << " TH1F" << "\n" <<
+                   "        " << nTH1S << " TH1S" << "\n" <<
+                   "        " << nTH1D << " TH1D" << "\n" <<
+                   "        " << nTH2F << " TH2F" << "\n" <<
+                   "        " << nTH2S << " TH2S" << "\n" <<
+                   "        " << nTH2D << " TH2D" << "\n" <<
+                   "        " << nTH3F << " TH3F" << "\n" <<
+                   "        " << nTProfile << " TProfile" << "\n" <<
+                   "        " << nTProfile2D << " TProfile2D" << "\n" <<
+                   "        " << nDouble << " Double" << "\n" <<
+                   "        " << nInt64 << " Int64" << "\n" <<
+                   "        " << nString << " String Objects" << "\n" ;
+    }
 
   if (verbosity > 1) std::cout << std::endl;
 
@@ -240,48 +178,19 @@ MEtoEDMConverter::beginRun(edm::Run& iRun, const edm::EventSetup& iSetup)
 
     switch (me->kind())
     {
-    case MonitorElement::DQM_KIND_INT:
-      break;
-
-    case MonitorElement::DQM_KIND_REAL:
-      break;
-
-    case MonitorElement::DQM_KIND_STRING:
-      break;
-
-    case MonitorElement::DQM_KIND_TH1F:
-      me->Reset();
-      break;
-
-    case MonitorElement::DQM_KIND_TH1S:
-      me->Reset();
-      break;
-
-    case MonitorElement::DQM_KIND_TH1D:
-      me->Reset();
-      break;
-
-    case MonitorElement::DQM_KIND_TH2F:
-      me->Reset();
-      break;
-
-    case MonitorElement::DQM_KIND_TH2S:
-      me->Reset();
-      break;
-
-    case MonitorElement::DQM_KIND_TH3F:
-      me->Reset();
-      break;
-
-    case MonitorElement::DQM_KIND_TPROFILE:
-      me->Reset();
-      break;
-
-    case MonitorElement::DQM_KIND_TPROFILE2D:
-      me->Reset();
-      break;
-
-    default:
+      case MonitorElement::DQM_KIND_INT: break;
+      case MonitorElement::DQM_KIND_REAL: break;
+      case MonitorElement::DQM_KIND_STRING: break;
+      case MonitorElement::DQM_KIND_TH1F: me->Reset(); break;
+      case MonitorElement::DQM_KIND_TH1S: me->Reset(); break;
+      case MonitorElement::DQM_KIND_TH1D: me->Reset(); break;
+      case MonitorElement::DQM_KIND_TH2F: me->Reset(); break;
+      case MonitorElement::DQM_KIND_TH2S: me->Reset(); break;
+      case MonitorElement::DQM_KIND_TH2D: me->Reset(); break;
+      case MonitorElement::DQM_KIND_TH3F: me->Reset(); break;
+      case MonitorElement::DQM_KIND_TPROFILE: me->Reset(); break;
+      case MonitorElement::DQM_KIND_TPROFILE2D: me->Reset(); break;
+      default:
       edm::LogError(MsgLoggerCat)
 	<< "ERROR: The DQM object '" << me->getFullname()
 	<< "' is neither a ROOT object nor a recognised "
@@ -297,76 +206,34 @@ MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
 {
 
   int run = iRun.run();
-  std::string release = edm::getReleaseVersion();
+  unsigned int n1F=0, n1S=0, n1D=0, n2F=0, n2S=0, n2D=0, n3F=0;
+  unsigned int nProf=0, nProf2=0, nDouble=0, nInt64=0, nString=0;
 
   std::string MsgLoggerCat = "MEtoEDMConverter_endRun";
-  
   if (verbosity)
-    edm::LogInfo (MsgLoggerCat) << "\nStoring MEtoEDM dataformat histograms.";
+    edm::LogInfo (MsgLoggerCat) << "\nStoring ME histograms.in EDM:";
 
   // extract ME information into vectors
   std::vector<MonitorElement *>::iterator mmi, mme;
   std::vector<MonitorElement *> items(dbe->getAllContents(path));
-  unsigned int n1F=0;
-  unsigned int n1S=0;
-  unsigned int n1D=0;
-  unsigned int n2F=0;
-  unsigned int n2S=0;
-  unsigned int n3F=0;
-  unsigned int nProf=0;
-  unsigned int nProf2=0;
-  unsigned int nDouble=0;
-  unsigned int nInt64=0;
-  unsigned int nString=0;
+
   for (mmi = items.begin (), mme = items.end (); mmi != mme; ++mmi) {
     MonitorElement *me = *mmi;
     switch (me->kind())
     {
-    case MonitorElement::DQM_KIND_INT:
-      ++nInt64;
-      break;
-
-    case MonitorElement::DQM_KIND_REAL:
-      ++nDouble;
-      break;
-
-    case MonitorElement::DQM_KIND_STRING:
-      ++nString;
-      break;
-
-    case MonitorElement::DQM_KIND_TH1F:
-      ++n1F;
-      break;
-
-    case MonitorElement::DQM_KIND_TH1S:
-      ++n1S;
-      break;
-
-    case MonitorElement::DQM_KIND_TH1D:
-      ++n1D;
-      break;
-
-    case MonitorElement::DQM_KIND_TH2F:
-      ++n2F;
-      break;
-
-    case MonitorElement::DQM_KIND_TH2S:
-      ++n2S;
-      break;
-
-    case MonitorElement::DQM_KIND_TH3F:
-      ++n3F;
-      break;
-
-    case MonitorElement::DQM_KIND_TPROFILE:
-      ++nProf;
-      break;
-
-    case MonitorElement::DQM_KIND_TPROFILE2D:
-      ++nProf2;
-      break;
-
-    default:
+      case MonitorElement::DQM_KIND_INT: ++nInt64; break;
+      case MonitorElement::DQM_KIND_REAL: ++nDouble; break;
+      case MonitorElement::DQM_KIND_STRING: ++nString; break;
+      case MonitorElement::DQM_KIND_TH1F: ++n1F; break;
+      case MonitorElement::DQM_KIND_TH1S: ++n1S; break;
+      case MonitorElement::DQM_KIND_TH1D: ++n1D; break;
+      case MonitorElement::DQM_KIND_TH2F: ++n2F; break;
+      case MonitorElement::DQM_KIND_TH2S: ++n2S; break;
+      case MonitorElement::DQM_KIND_TH2D: ++n2D; break;
+      case MonitorElement::DQM_KIND_TH3F: ++n3F; break;
+      case MonitorElement::DQM_KIND_TPROFILE: ++nProf; break;
+      case MonitorElement::DQM_KIND_TPROFILE2D: ++nProf2; break;
+      default:
       edm::LogError(MsgLoggerCat)
 	<< "ERROR: The DQM object '" << me->getFullname()
 	<< "' is neither a ROOT object nor a recognised "
@@ -384,6 +251,7 @@ MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
   std::auto_ptr<MEtoEDM<TH1D> > pOut1d(new MEtoEDM<TH1D>(n1D));
   std::auto_ptr<MEtoEDM<TH2F> > pOut2(new MEtoEDM<TH2F>(n2F));
   std::auto_ptr<MEtoEDM<TH2S> > pOut2s(new MEtoEDM<TH2S>(n2S));
+  std::auto_ptr<MEtoEDM<TH2D> > pOut2d(new MEtoEDM<TH2D>(n2D));
   std::auto_ptr<MEtoEDM<TH3F> > pOut3(new MEtoEDM<TH3F>(n3F));
   std::auto_ptr<MEtoEDM<TProfile> > pOutProf(new MEtoEDM<TProfile>(nProf));
   std::auto_ptr<MEtoEDM<TProfile2D> > pOutProf2(new MEtoEDM<TProfile2D>(nProf2));
@@ -391,65 +259,47 @@ MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
   for (mmi = items.begin (), mme = items.end (); mmi != mme; ++mmi) {
 
     MonitorElement *me = *mmi;
+    std::string release = edm::getReleaseVersion();
 
     // get monitor elements
     switch (me->kind())
     {
     case MonitorElement::DQM_KIND_INT:
       pOutInt->putMEtoEdmObject(me->getFullname(),me->getTags(),me->getIntValue(),
-				release,run,datatier);
-      break;
-
+  				  release,run,datatier); break;
     case MonitorElement::DQM_KIND_REAL:
       pOutFloat->putMEtoEdmObject(me->getFullname(),me->getTags(),me->getFloatValue(),
-				  release,run,datatier);
-      break;
-
+				  release,run,datatier); break;
     case MonitorElement::DQM_KIND_STRING:
       pOutString->putMEtoEdmObject(me->getFullname(),me->getTags(),me->getStringValue(),
-				   release,run,datatier);
-      break;
-
+				   release,run,datatier); break;
     case MonitorElement::DQM_KIND_TH1F:
       pOut1->putMEtoEdmObject(me->getFullname(),me->getTags(),*me->getTH1F(),
-			      release,run,datatier);
-      break;
-
+			      release,run,datatier); break;
     case MonitorElement::DQM_KIND_TH1S:
       pOut1s->putMEtoEdmObject(me->getFullname(),me->getTags(),*me->getTH1S(),
-			       release,run,datatier);
-      break;
-
+			       release,run,datatier); break;
     case MonitorElement::DQM_KIND_TH1D:
       pOut1d->putMEtoEdmObject(me->getFullname(),me->getTags(),*me->getTH1D(),
-			       release,run,datatier);
-      break;
-
+			       release,run,datatier); break;
     case MonitorElement::DQM_KIND_TH2F:
       pOut2->putMEtoEdmObject(me->getFullname(),me->getTags(),*me->getTH2F(),
-			      release,run,datatier);
-      break;
-
+			      release,run,datatier); break;
     case MonitorElement::DQM_KIND_TH2S:
       pOut2s->putMEtoEdmObject(me->getFullname(),me->getTags(),*me->getTH2S(),
-			       release,run,datatier);
-      break;
-
+			       release,run,datatier); break;
+    case MonitorElement::DQM_KIND_TH2D:
+      pOut2d->putMEtoEdmObject(me->getFullname(),me->getTags(),*me->getTH2D(),
+			       release,run,datatier); break;
     case MonitorElement::DQM_KIND_TH3F:
       pOut3->putMEtoEdmObject(me->getFullname(),me->getTags(),*me->getTH3F(),
-			      release,run,datatier);
-      break;
-
+			      release,run,datatier); break;
     case MonitorElement::DQM_KIND_TPROFILE:
       pOutProf->putMEtoEdmObject(me->getFullname(),me->getTags(),*me->getTProfile(),
-			      release,run,datatier);
-      break;
-
+			      release,run,datatier); break;
     case MonitorElement::DQM_KIND_TPROFILE2D:
       pOutProf2->putMEtoEdmObject(me->getFullname(),me->getTags(),*me->getTProfile2D(),
-				  release,run,datatier);
-      break;
-
+				  release,run,datatier); break;
     default:
       edm::LogError(MsgLoggerCat)
 	<< "ERROR: The DQM object '" << me->getFullname()
@@ -473,6 +323,7 @@ MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
   iRun.put(pOut1d,fName);
   iRun.put(pOut2,fName);
   iRun.put(pOut2s,fName);
+  iRun.put(pOut2d,fName);
   iRun.put(pOut3,fName);
   iRun.put(pOutProf,fName);
   iRun.put(pOutProf2,fName);
