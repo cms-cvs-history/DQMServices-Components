@@ -2,8 +2,8 @@
  *  
  *  See header file for description of class
  *
- *  $Date: 2009/09/06 12:07:14 $
- *  $Revision: 1.23.2.1 $
+ *  $Date: 2009/09/15 09:34:15 $
+ *  $Revision: 1.23.2.2 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -56,7 +56,7 @@ MEtoEDMConverter::MEtoEDMConverter(const edm::ParameterSet & iPSet) :
   produces<MEtoEDM<TProfile>, edm::InRun>(fName);
   produces<MEtoEDM<TProfile2D>, edm::InRun>(fName);
   produces<MEtoEDM<double>, edm::InRun>(fName);
-  produces<MEtoEDM<int>, edm::InRun>(fName);
+  produces<MEtoEDM<int64_t>, edm::InRun>(fName);
   produces<MEtoEDM<TString>, edm::InRun>(fName);
 
   firstevent = true;
@@ -243,7 +243,7 @@ MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
   }
 
 //  std::auto_ptr<MEtoEDM<int64_t> > pOutInt(new MEtoEDM<int64_t>(nInt64));
-  std::auto_ptr<MEtoEDM<int> > pOutInt(new MEtoEDM<int>(nInt64));
+  std::auto_ptr<MEtoEDM<int64_t> > pOutInt(new MEtoEDM<int64_t>(nInt64));
   std::auto_ptr<MEtoEDM<double> > pOutFloat(new MEtoEDM<double>(nDouble));
   std::auto_ptr<MEtoEDM<TString> > pOutString(new MEtoEDM<TString>(nString));
   std::auto_ptr<MEtoEDM<TH1F> > pOut1(new MEtoEDM<TH1F>(n1F));

@@ -6,8 +6,8 @@
  *  Class to take dqm monitor elements and convert into a
  *  ROOT dataformat stored in Run tree of edm file
  *
- *  $Date: 2009/05/04 17:46:13 $
- *  $Revision: 1.13 $
+ *  $Date: 2009/09/15 09:38:04 $
+ *  $Revision: 1.13.2.1 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -41,6 +41,7 @@
 #include <vector>
 #include <map>
 
+#include <stdint.h>
 #include "TString.h"
 
 #include "classlib/utils/StringList.h"

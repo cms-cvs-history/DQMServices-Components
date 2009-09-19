@@ -2,8 +2,8 @@
  *
  *  See header file for description of class
  *
- *  $Date: 2009/09/06 12:07:14 $
- *  $Revision: 1.21.2.1 $
+ *  $Date: 2009/09/15 09:40:52 $
+ *  $Revision: 1.21.2.2 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -750,7 +750,7 @@ void EDMtoMEConverter::convert(const edm::Run& iRun, const bool endrun)
       if (verbosity >= 0)
         edm::LogInfo (MsgLoggerCat) << "\nRetrieving Int MonitorElements.";
 
-      edm::Handle<MEtoEDM<int> > metoedm;
+      edm::Handle<MEtoEDM<int64_t> > metoedm;
       iRun.getByType(metoedm);
       if (!metoedm.isValid()) {
         //edm::LogWarning(MsgLoggerCat)
@@ -758,7 +758,7 @@ void EDMtoMEConverter::convert(const edm::Run& iRun, const bool endrun)
         continue;
       }
 
-      std::vector<MEtoEDM<int>::MEtoEDMObject> metoedmobject =
+      std::vector<MEtoEDM<int64_t>::MEtoEDMObject> metoedmobject =
         metoedm->getMEtoEdmObject();
 
       meint.resize(metoedmobject.size());
