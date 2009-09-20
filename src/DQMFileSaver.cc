@@ -27,6 +27,8 @@ getAnInt(const edm::ParameterSet &ps, int &value, const std::string &name)
 void
 DQMFileSaver::saveForOffline(const std::string &workflow, int run, int lumi)
 {
+  dbe_->get("DQMVersion/Dataset")->Fill(workflow_);
+
   char suffix[64];
   sprintf(suffix, "R%09d", run);
 
@@ -74,6 +76,8 @@ DQMFileSaver::saveForOffline(const std::string &workflow, int run, int lumi)
 void
 DQMFileSaver::saveForOnline(const std::string &suffix, const std::string &rewrite)
 {
+   std::string dataset="/Global/Online/P5";
+   dbe_->get("DQMVersion/Dataset")->Fill(dataset);
    std::vector<std::string> systems = (dbe_->cd(), dbe_->getSubdirs());
 
    for (size_t i = 0, e = systems.size(); i != e; ++i) {

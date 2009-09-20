@@ -2,8 +2,8 @@
  *  
  *  See header file for description of class
  *
- *  $Date: 2009/09/15 09:34:15 $
- *  $Revision: 1.23.2.2 $
+ *  $Date: 2009/09/19 15:53:12 $
+ *  $Revision: 1.23.2.3 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -94,7 +94,6 @@ MEtoEDMConverter::endJob(void)
     // check type
     if (verbosity > 1) std::cout << "MEobject:" << std::endl;
     MonitorElement *me = *mmi;
-    TObject *tobj = me->getRootObject();
     switch (me->kind())
     {
       case MonitorElement::DQM_KIND_INT: ++nInt64; break;
