@@ -75,21 +75,21 @@ DQMFileSaver::getShowTags(void)
 }
 
 void 
-DQMFileSaver::makeVersionInfo()
+DQMFileSaver::makeProvInfo()
 {
     dbe_->cd() ;
-    dbe_->setCurrentFolder("VersionInfo");
-    if (dbe_->get("VersionInfo/CMSSW")) return ;
+    dbe_->setCurrentFolder("ProvInfo");
+    if (dbe_->get("ProvInfo/CMSSW")) return ;
     
     versCMSSW_     = dbe_->bookString("CMSSW",edm::getReleaseVersion().c_str() );
     hostName_      = dbe_->bookString("hostName",gSystem->HostName());
     workingDir_    = dbe_->bookString("workingDir",gSystem->pwd());
     processId_     = dbe_->bookInt("processID"); processId_->Fill(gSystem->GetPid());
 
+    versDataset_   = dbe_->bookString("Dataset",workflow_);
     versGlobaltag_ = dbe_->bookString("Globaltag","global tag"); // FIXME
     versTaglist_   = dbe_->bookString("Taglist",getShowTags()); 
-    versDataset_   = dbe_->bookString("Dataset",workflow_);
-    
+
     isComplete_ = dbe_->bookInt("runIsComplete"); 
     isComplete_->Fill((runIsComplete_?1:0));
     fileVersion_ = dbe_->bookInt("fileVersion");
@@ -101,7 +101,7 @@ DQMFileSaver::makeVersionInfo()
 void
 DQMFileSaver::saveForOffline(const std::string &workflow, int run, int lumi)
 {
-  makeVersionInfo();
+  if (makeProvInfo_) makeProvInfo();
 
   char suffix[64];
   sprintf(suffix, "R%09d", run);
@@ -152,7 +152,7 @@ DQMFileSaver::saveForOnline(const std::string &suffix, const std::string &rewrit
 {
    std::vector<std::string> systems = (dbe_->cd(), dbe_->getSubdirs());
 
-   makeVersionInfo();
+   if (makeProvInfo_) makeProvInfo();
    for (size_t i = 0, e = systems.size(); i != e; ++i) {
      if (systems[i] != "Reference") {
        dbe_->cd();
@@ -194,6 +194,7 @@ DQMFileSaver::DQMFileSaver(const edm::ParameterSet &ps)
     saveReferenceQMin_ (dqm::qstatus::STATUS_OK),
     forceRunNumber_ (-1),
     fileBaseName_ (""),
+    makeProvInfo_ (false),
     dbe_ (&*edm::Service<DQMStore>()),
     irun_ (-1),
     ilumi_ (-1),
@@ -233,8 +234,11 @@ DQMFileSaver::DQMFileSaver(const edm::ParameterSet &ps)
   else if (! ps.getUntrackedParameter<std::string>("workflow", "").empty())
     throw cms::Exception("DQMFileSaver")
       << "The 'workflow' parameter must be empty in 'Online' convention.";
-  else
+  else // for online set parameters
+  {
     workflow_="/Global/Online/P5";
+    makeProvInfo_=true;
+  }
     
   // Allow file producer to be set to specific values in certain conditions.
   producer_ = ps.getUntrackedParameter<std::string>("producer", producer_);
@@ -258,6 +262,8 @@ DQMFileSaver::DQMFileSaver(const edm::ParameterSet &ps)
   version_ = ps.getUntrackedParameter<int>("version", version_);
   // flag to signal that file contains data from complete run
   runIsComplete_ = ps.getUntrackedParameter<bool>("runIsComplete", runIsComplete_);
+  // flag to switch storage of provenance info effective for offline
+  makeProvInfo_ = ps.getUntrackedParameter<bool>("makeProvInfo", makeProvInfo_);
 
   // Check how we should save the references.
   std::string refsave = ps.getUntrackedParameter<std::string>("referenceHandling", "default");
