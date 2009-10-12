@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 		{
 		  for(unsigned int j = 0 ; j < refHistos.size() ; ++j)
 		    {
-		      // 		      std::cout << "\tComparing " << thisHisto << " against " << refHistos[j] << std::endl ;
+//  		      std::cout << "\tComparing " << thisHisto << " against " << refHistos[j] << std::endl ;
 		      boost::regex rge(refHistos[j].c_str()) ;
 		      boost::smatch what;
 		      if(boost::regex_match(thisHisto, what, rge))
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
 	}
     }
 
-  // Compose the correct output file name, with DataSet and 
+  // Compose the correct ROOT & METADATA output file name, with DataSet and 
   // SoftwareVersion as specified into the XML configuration file
   std::string toBeAppended(cfg.getDatasetAndSoftwareVersionAndTag()) ;
   toBeAppended += ".root" ;
@@ -158,6 +158,13 @@ int main(int argc, char **argv)
     metaos << it->first << " " << it->second << std::endl ;
   
   metaos.close() ;
+
+  // Compose the correct TOTAL XML output file name, with DataSet and 
+  // SoftwareVersion as specified into the XML configuration file
+
+  std::string xmlOutputFileName(rootOutputFile) ;
+  xmlOutputFileName.replace(xmlOutputFileName.find(".root"), metaOutputFileName.length(), ".xml") ;
+  cfg.saveFinalXML(xmlOutputFileName) ;
 
   return 0;
 }

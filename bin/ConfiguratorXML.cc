@@ -279,6 +279,39 @@ void ConfiguratorXML::getMetadataInfo(std::vector<std::pair<std::string,std::str
     }
 }
 
+void ConfiguratorXML::saveFinalXML(std::string filename)
+{
+  DOMDocument * xmlDoc = _ConfigFileParser->getDocument();
+  // construct the DOMWriter
+  DOMImplementation* impl =
+    DOMImplementationRegistry::getDOMImplementation(0); 
+  DOMWriter* myWriter = ((DOMImplementationLS*)impl)->createDOMWriter();
+  // optionally you can set some features on this serializer
+  if (myWriter->canSetFeature(XMLUni::fgDOMWRTEntities, true))
+    myWriter->setFeature(XMLUni::fgDOMWRTEntities, false);
+
+  // construct the LocalFileFormatTarget
+  XMLFormatTarget *myFormatTarget = new LocalFileFormatTarget(filename.c_str());
+  
+  // serialize a DOMNode to the local file "myXMLFile.xml"
+  try
+    {
+      myWriter->writeNode(myFormatTarget , *xmlDoc);
+    }
+  catch(...) 
+    { 
+      std::cout << "Unexpected error." << std::endl ; 
+    }
+  
+  // optionally, you can flush the buffer to ensure all contents are written
+  myFormatTarget->flush();
+  
+  // release the memory
+  myWriter->release();
+  delete myFormatTarget; 
+}
+
+
 ConfiguratorXML::~ConfiguratorXML()
 {
   // Terminate XErces system

@@ -12,6 +12,7 @@ class Configurator
   virtual void getHistosToFetchAndSource(std::map<std::string, std::vector<std::string> > & value) {_instance->getHistosToFetchAndSource(value) ;};
   virtual std::string getDatasetAndSoftwareVersionAndTag() {return _instance->getDatasetAndSoftwareVersionAndTag();};
   virtual void getMetadataInfo(std::vector<std::pair<std::string,std::string > > & metainfo) {_instance->getMetadataInfo(metainfo) ;} ;
+  virtual void saveFinalXML(std::string filename) {_instance->saveFinalXML(filename) ;} ;
   virtual ~Configurator() 
     {
       if(_instance)

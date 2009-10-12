@@ -16,6 +16,7 @@
 #include <xercesc/dom/DOMNodeIterator.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/dom/DOMText.hpp>
+#include <xercesc/dom/DOMWriter.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 
@@ -37,6 +38,7 @@ class ConfiguratorXML : public Configurator
   virtual void  getHistosToFetchAndSource(std::map<std::string, std::vector<std::string> > &) ;
   virtual std::string getDatasetAndSoftwareVersionAndTag() ;
   virtual void getMetadataInfo(std::vector<std::pair<std::string, std::string> > & metainfo) ;
+  void    saveFinalXML(std::string filename) ;
   virtual ~ConfiguratorXML() ; 
  private:
   ConfiguratorXML(std::string) ;
