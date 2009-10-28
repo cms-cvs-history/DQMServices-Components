@@ -2,8 +2,8 @@
  *
  *  See header file for description of class
  *
- *  $Date: 2009/10/13 07:45:29 $
- *  $Revision: 1.25 $
+ *  $Date: 2009/10/13 12:02:38 $
+ *  $Revision: 1.26 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -21,10 +21,8 @@ EDMtoMEConverter::EDMtoMEConverter(const edm::ParameterSet & iPSet) :
   verbosity = iPSet.getUntrackedParameter<int>("Verbosity");
   frequency = iPSet.getUntrackedParameter<int>("Frequency");
 
-  convertOnEndLumi = iPSet.getUntrackedParameter<bool>("convertOnEndLumi",false);
-  convertOnEndRun = iPSet.getUntrackedParameter<bool>("convertOnEndRun",false);
-
-  prescaleFactor = iPSet.getUntrackedParameter<int>("prescaleFactor", 1);
+  convertOnEndLumi = iPSet.getUntrackedParameter<bool>("convertOnEndLumi",true);
+  convertOnEndRun = iPSet.getUntrackedParameter<bool>("convertOnEndRun",true);
 
   // reset the release tag
   releaseTag = false;
@@ -134,11 +132,10 @@ void EDMtoMEConverter::endLuminosityBlock(const edm::LuminosityBlock& iLumi,
                                           const edm::EventSetup& iSetup)
 {
   if (convertOnEndLumi) {
-    if (prescaleFactor > 0 &&
-        iLumi.id().luminosityBlock() % prescaleFactor == 0) {
-      const edm::Run& iRun = iLumi.getRun();
-      convert(iRun, false);
-    }
+    const edm::Run& iRun = iLumi.getRun();
+    convert(iRun, false);
+    //to be migrated once sub-systems are ready
+    //convert(iLumi, false);
   }
   return;
 }
@@ -151,7 +148,7 @@ void EDMtoMEConverter::analyze(const edm::Event& iEvent,
 
 void EDMtoMEConverter::convert(const edm::Run& iRun, const bool endrun)
 {
-  std::string MsgLoggerCat = "EDMtoMEConverter_convert";
+  std::string MsgLoggerCat = "EDMtoMEConverter_convertRun";
 
   if (verbosity >= 0)
     edm::LogInfo (MsgLoggerCat) << "\nRestoring MonitorElements.";
@@ -916,6 +913,846 @@ void EDMtoMEConverter::convert(const edm::Run& iRun, const bool endrun)
     if (classtypes[ii] == "String") {
       edm::Handle<MEtoEDM<TString> > metoedm;
       iRun.getByType(metoedm);
+
+      if (!metoedm.isValid()) {
+        //edm::LogWarning(MsgLoggerCat)
+        //  << "MEtoEDM<TString> doesn't exist in run";
+        continue;
+      }
+
+      std::vector<MEtoEDM<TString>::MEtoEDMObject> metoedmobject =
+        metoedm->getMEtoEdmObject();
+
+      me8.resize(metoedmobject.size());
+
+      for (unsigned int i = 0; i < metoedmobject.size(); ++i) {
+
+        me8[i] = 0;
+
+        // get full path of monitor element
+        std::string pathname = metoedmobject[i].name;
+        if (verbosity) std::cout << pathname << std::endl;
+
+        // set the release tag if it has not be yet done
+        if (!releaseTag)
+        {
+          dbe->cd();
+          dbe->bookString(
+            "ReleaseTag",
+            metoedmobject[i].
+            release.substr(1,metoedmobject[i].release.size()-2)
+          );
+          releaseTag = true;
+        }
+
+        std::string dir;
+        std::string name;
+
+        // deconstruct path from fullpath
+        StringList fulldir = StringOps::split(pathname,"/");
+        name = *(fulldir.end() - 1);
+
+        for (unsigned j = 0; j < fulldir.size() - 1; ++j) {
+          dir += fulldir[j];
+          if (j != fulldir.size() - 2) dir += "/";
+        }
+
+        // define new monitor element
+        if (dbe) {
+          dbe->setCurrentFolder(dir);
+          std::string scont = metoedmobject[i].object.Data();
+          me8[i] = dbe->bookString(name,scont);
+        } // end define new monitor elements
+
+        // attach taglist
+        TagList tags = metoedmobject[i].tags;
+
+        for (unsigned int j = 0; j < tags.size(); ++j) {
+          dbe->tag(me8[i]->getFullname(),tags[j]);
+        }
+      } // end loop thorugh metoedmobject
+    } // end String creation
+  }
+
+  // verify tags stored properly
+  if (verbosity) {
+    std::vector<std::string> stags;
+    dbe->getAllTags(stags);
+    for (unsigned int i = 0; i < stags.size(); ++i) {
+      std::cout << "Tags: " << stags[i] << std::endl;
+    }
+  }
+
+  return;
+}
+
+void EDMtoMEConverter::convert(const edm::LuminosityBlock& iLumi, const bool endrun)
+{
+  std::string MsgLoggerCat = "EDMtoMEConverter_convertLumi";
+
+  if (verbosity >= 0)
+    edm::LogInfo (MsgLoggerCat) << "\nRestoring MonitorElements.";
+
+  for (unsigned int ii = 0; ii < classtypes.size(); ++ii) {
+
+    if (classtypes[ii] == "TH1F") {
+      edm::Handle<MEtoEDM<TH1F> > metoedm;
+      iLumi.getByType(metoedm);
+
+      if (!metoedm.isValid()) {
+        //edm::LogWarning(MsgLoggerCat)
+        //  << "MEtoEDM<TH1F> doesn't exist in run";
+        continue;
+      }
+
+      std::vector<MEtoEDM<TH1F>::MEtoEDMObject> metoedmobject =
+        metoedm->getMEtoEdmObject();
+
+      me1.resize(metoedmobject.size());
+
+      for (unsigned int i = 0; i < metoedmobject.size(); ++i) {
+
+        me1[i] = 0;
+
+        // get full path of monitor element
+        std::string pathname = metoedmobject[i].name;
+        if (verbosity) std::cout << pathname << std::endl;
+
+        // set the release tag if it has not be yet done
+        if (!releaseTag)
+        {
+          dbe->cd();
+          dbe->bookString(
+            "ReleaseTag",
+            metoedmobject[i].
+            release.substr(1,metoedmobject[i].release.size()-2)
+          );
+          releaseTag = true;
+        }
+
+        std::string dir;
+
+        // deconstruct path from fullpath
+        StringList fulldir = StringOps::split(pathname,"/");
+
+        for (unsigned j = 0; j < fulldir.size() - 1; ++j) {
+          dir += fulldir[j];
+          if (j != fulldir.size() - 2) dir += "/";
+        }
+
+        // define new monitor element
+        if (dbe) {
+          dbe->setCurrentFolder(dir);
+          me1[i] = dbe->book1D(metoedmobject[i].object.GetName(),
+                               &metoedmobject[i].object);
+        } // end define new monitor elements
+
+        // attach taglist
+        TagList tags = metoedmobject[i].tags;
+
+        for (unsigned int j = 0; j < tags.size(); ++j) {
+          dbe->tag(me1[i]->getFullname(),tags[j]);
+        }
+      } // end loop thorugh metoedmobject
+    } // end TH1F creation
+
+    if (classtypes[ii] == "TH1S") {
+      edm::Handle<MEtoEDM<TH1S> > metoedm;
+      iLumi.getByType(metoedm);
+
+      if (!metoedm.isValid()) {
+        //edm::LogWarning(MsgLoggerCat)
+        //  << "MEtoEDM<TH1S> doesn't exist in run";
+        continue;
+      }
+
+      std::vector<MEtoEDM<TH1S>::MEtoEDMObject> metoedmobject =
+        metoedm->getMEtoEdmObject();
+
+      me1.resize(metoedmobject.size());
+
+      for (unsigned int i = 0; i < metoedmobject.size(); ++i) {
+
+        me1[i] = 0;
+
+        // get full path of monitor element
+        std::string pathname = metoedmobject[i].name;
+        if (verbosity) std::cout << pathname << std::endl;
+
+        // set the release tag if it has not be yet done
+        if (!releaseTag)
+        {
+          dbe->cd();
+          dbe->bookString(
+            "ReleaseTag",
+            metoedmobject[i].
+            release.substr(1,metoedmobject[i].release.size()-2)
+          );
+          releaseTag = true;
+        }
+
+        std::string dir;
+
+        // deconstruct path from fullpath
+        StringList fulldir = StringOps::split(pathname,"/");
+
+        for (unsigned j = 0; j < fulldir.size() - 1; ++j) {
+          dir += fulldir[j];
+          if (j != fulldir.size() - 2) dir += "/";
+        }
+
+        // define new monitor element
+        if (dbe) {
+          dbe->setCurrentFolder(dir);
+          me1[i] = dbe->book1S(metoedmobject[i].object.GetName(),
+                               &metoedmobject[i].object);
+        } // end define new monitor elements
+
+        // attach taglist
+        TagList tags = metoedmobject[i].tags;
+
+        for (unsigned int j = 0; j < tags.size(); ++j) {
+          dbe->tag(me1[i]->getFullname(),tags[j]);
+        }
+      } // end loop thorugh metoedmobject
+    } // end TH1S creation
+
+    if (classtypes[ii] == "TH1D") {
+      edm::Handle<MEtoEDM<TH1D> > metoedm;
+      iLumi.getByType(metoedm);
+
+      if (!metoedm.isValid()) {
+        //edm::LogWarning(MsgLoggerCat)
+        //  << "MEtoEDM<TH1D> doesn't exist in run";
+        continue;
+      }
+
+      std::vector<MEtoEDM<TH1D>::MEtoEDMObject> metoedmobject =
+        metoedm->getMEtoEdmObject();
+
+      me1.resize(metoedmobject.size());
+
+      for (unsigned int i = 0; i < metoedmobject.size(); ++i) {
+
+        me1[i] = 0;
+
+        // get full path of monitor element
+        std::string pathname = metoedmobject[i].name;
+        if (verbosity) std::cout << pathname << std::endl;
+
+        // set the release tag if it has not be yet done
+        if (!releaseTag)
+        {
+          dbe->cd();
+          dbe->bookString(
+            "ReleaseTag",
+            metoedmobject[i].
+            release.substr(1,metoedmobject[i].release.size()-2)
+          );
+          releaseTag = true;
+        }
+
+        std::string dir;
+
+        // deconstruct path from fullpath
+        StringList fulldir = StringOps::split(pathname,"/");
+
+        for (unsigned j = 0; j < fulldir.size() - 1; ++j) {
+          dir += fulldir[j];
+          if (j != fulldir.size() - 2) dir += "/";
+        }
+
+        // define new monitor element
+        if (dbe) {
+          dbe->setCurrentFolder(dir);
+          me1[i] = dbe->book1DD(metoedmobject[i].object.GetName(),
+                               &metoedmobject[i].object);
+        } // end define new monitor elements
+
+        // attach taglist
+        TagList tags = metoedmobject[i].tags;
+
+        for (unsigned int j = 0; j < tags.size(); ++j) {
+          dbe->tag(me1[i]->getFullname(),tags[j]);
+        }
+      } // end loop thorugh metoedmobject
+    } // end TH1D creation
+
+    if (classtypes[ii] == "TH2F") {
+      edm::Handle<MEtoEDM<TH2F> > metoedm;
+      iLumi.getByType(metoedm);
+
+      if (!metoedm.isValid()) {
+        //edm::LogWarning(MsgLoggerCat)
+        //  << "MEtoEDM<TH2F> doesn't exist in run";
+        continue;
+      }
+
+      std::vector<MEtoEDM<TH2F>::MEtoEDMObject> metoedmobject =
+        metoedm->getMEtoEdmObject();
+
+      me2.resize(metoedmobject.size());
+
+      for (unsigned int i = 0; i < metoedmobject.size(); ++i) {
+
+        me2[i] = 0;
+
+        // get full path of monitor element
+        std::string pathname = metoedmobject[i].name;
+        if (verbosity) std::cout << pathname << std::endl;
+
+        // set the release tag if it has not be yet done
+        if (!releaseTag)
+        {
+          dbe->cd();
+          dbe->bookString(
+            "ReleaseTag",
+            metoedmobject[i].
+            release.substr(1,metoedmobject[i].release.size()-2)
+          );
+          releaseTag = true;
+        }
+
+        std::string dir;
+
+        // deconstruct path from fullpath
+        StringList fulldir = StringOps::split(pathname,"/");
+
+        for (unsigned j = 0; j < fulldir.size() - 1; ++j) {
+          dir += fulldir[j];
+          if (j != fulldir.size() - 2) dir += "/";
+        }
+
+        // define new monitor element
+        if (dbe) {
+          dbe->setCurrentFolder(dir);
+          me2[i] = dbe->book2D(metoedmobject[i].object.GetName(),
+                               &metoedmobject[i].object);
+        } // end define new monitor elements
+
+        // attach taglist
+        TagList tags = metoedmobject[i].tags;
+
+        for (unsigned int j = 0; j < tags.size(); ++j) {
+          dbe->tag(me2[i]->getFullname(),tags[j]);
+        }
+      } // end loop thorugh metoedmobject
+    } // end TH2F creation
+
+    if (classtypes[ii] == "TH2S") {
+      edm::Handle<MEtoEDM<TH2S> > metoedm;
+      iLumi.getByType(metoedm);
+
+      if (!metoedm.isValid()) {
+        //edm::LogWarning(MsgLoggerCat)
+        //  << "MEtoEDM<TH2S> doesn't exist in run";
+        continue;
+      }
+
+      std::vector<MEtoEDM<TH2S>::MEtoEDMObject> metoedmobject =
+        metoedm->getMEtoEdmObject();
+
+      me2.resize(metoedmobject.size());
+
+      for (unsigned int i = 0; i < metoedmobject.size(); ++i) {
+
+        me2[i] = 0;
+
+        // get full path of monitor element
+        std::string pathname = metoedmobject[i].name;
+        if (verbosity) std::cout << pathname << std::endl;
+
+        // set the release tag if it has not be yet done
+        if (!releaseTag)
+        {
+          dbe->cd();
+          dbe->bookString(
+            "ReleaseTag",
+            metoedmobject[i].
+            release.substr(1,metoedmobject[i].release.size()-2)
+          );
+          releaseTag = true;
+        }
+
+        std::string dir;
+
+        // deconstruct path from fullpath
+        StringList fulldir = StringOps::split(pathname,"/");
+
+        for (unsigned j = 0; j < fulldir.size() - 1; ++j) {
+          dir += fulldir[j];
+          if (j != fulldir.size() - 2) dir += "/";
+        }
+
+        // define new monitor element
+        if (dbe) {
+          dbe->setCurrentFolder(dir);
+          me2[i] = dbe->book2S(metoedmobject[i].object.GetName(),
+                               &metoedmobject[i].object);
+        } // end define new monitor elements
+
+        // attach taglist
+        TagList tags = metoedmobject[i].tags;
+
+        for (unsigned int j = 0; j < tags.size(); ++j) {
+          dbe->tag(me2[i]->getFullname(),tags[j]);
+        }
+      } // end loop thorugh metoedmobject
+    } // end TH2S creation
+
+    if (classtypes[ii] == "TH2D") {
+      edm::Handle<MEtoEDM<TH2D> > metoedm;
+      iLumi.getByType(metoedm);
+
+      if (!metoedm.isValid()) {
+        //edm::LogWarning(MsgLoggerCat)
+        //  << "MEtoEDM<TH2D> doesn't exist in run";
+        continue;
+      }
+
+      std::vector<MEtoEDM<TH2D>::MEtoEDMObject> metoedmobject =
+        metoedm->getMEtoEdmObject();
+
+      me2.resize(metoedmobject.size());
+
+      for (unsigned int i = 0; i < metoedmobject.size(); ++i) {
+
+        me2[i] = 0;
+
+        // get full path of monitor element
+        std::string pathname = metoedmobject[i].name;
+        if (verbosity) std::cout << pathname << std::endl;
+
+        // set the release tag if it has not be yet done
+        if (!releaseTag)
+        {
+          dbe->cd();
+          dbe->bookString(
+            "ReleaseTag",
+            metoedmobject[i].
+            release.substr(1,metoedmobject[i].release.size()-2)
+          );
+          releaseTag = true;
+        }
+
+        std::string dir;
+
+        // deconstruct path from fullpath
+        StringList fulldir = StringOps::split(pathname,"/");
+
+        for (unsigned j = 0; j < fulldir.size() - 1; ++j) {
+          dir += fulldir[j];
+          if (j != fulldir.size() - 2) dir += "/";
+        }
+
+        // define new monitor element
+        if (dbe) {
+          dbe->setCurrentFolder(dir);
+          me2[i] = dbe->book2DD(metoedmobject[i].object.GetName(),
+                               &metoedmobject[i].object);
+        } // end define new monitor elements
+
+        // attach taglist
+        TagList tags = metoedmobject[i].tags;
+
+        for (unsigned int j = 0; j < tags.size(); ++j) {
+          dbe->tag(me2[i]->getFullname(),tags[j]);
+        }
+      } // end loop thorugh metoedmobject
+    } // end TH2D creation
+
+    if (classtypes[ii] == "TH3F") {
+      edm::Handle<MEtoEDM<TH3F> > metoedm;
+      iLumi.getByType(metoedm);
+
+      if (!metoedm.isValid()) {
+        //edm::LogWarning(MsgLoggerCat)
+        //  << "MEtoEDM<TH3F> doesn't exist in run";
+        continue;
+      }
+
+      std::vector<MEtoEDM<TH3F>::MEtoEDMObject> metoedmobject =
+        metoedm->getMEtoEdmObject();
+
+      me3.resize(metoedmobject.size());
+
+      for (unsigned int i = 0; i < metoedmobject.size(); ++i) {
+
+        me3[i] = 0;
+
+        // get full path of monitor element
+        std::string pathname = metoedmobject[i].name;
+        if (verbosity) std::cout << pathname << std::endl;
+
+        // set the release tag if it has not be yet done
+        if (!releaseTag)
+        {
+          dbe->cd();
+          dbe->bookString(
+            "ReleaseTag",
+            metoedmobject[i].
+            release.substr(1,metoedmobject[i].release.size()-2)
+          );
+          releaseTag = true;
+        }
+
+        std::string dir;
+
+        // deconstruct path from fullpath
+        StringList fulldir = StringOps::split(pathname,"/");
+
+        for (unsigned j = 0; j < fulldir.size() - 1; ++j) {
+          dir += fulldir[j];
+          if (j != fulldir.size() - 2) dir += "/";
+        }
+
+        // define new monitor element
+        if (dbe) {
+          dbe->setCurrentFolder(dir);
+          me3[i] = dbe->book3D(metoedmobject[i].object.GetName(),
+                               &metoedmobject[i].object);
+        } // end define new monitor elements
+
+        // attach taglist
+        TagList tags = metoedmobject[i].tags;
+
+        for (unsigned int j = 0; j < tags.size(); ++j) {
+          dbe->tag(me3[i]->getFullname(),tags[j]);
+        }
+      } // end loop thorugh metoedmobject
+    } // end TH3F creation
+
+    if (classtypes[ii] == "TProfile") {
+      edm::Handle<MEtoEDM<TProfile> > metoedm;
+      iLumi.getByType(metoedm);
+
+      if (!metoedm.isValid()) {
+        //edm::LogWarning(MsgLoggerCat)
+        //  << "MEtoEDM<TProfile> doesn't exist in run";
+        continue;
+      }
+
+      std::vector<MEtoEDM<TProfile>::MEtoEDMObject> metoedmobject =
+        metoedm->getMEtoEdmObject();
+
+      me4.resize(metoedmobject.size());
+
+      for (unsigned int i = 0; i < metoedmobject.size(); ++i) {
+
+        me4[i] = 0;
+
+        // get full path of monitor element
+        std::string pathname = metoedmobject[i].name;
+        if (verbosity) std::cout << pathname << std::endl;
+
+        // set the release tag if it has not be yet done
+        if (!releaseTag)
+        {
+          dbe->cd();
+          dbe->bookString(
+            "ReleaseTag",
+            metoedmobject[i].
+            release.substr(1,metoedmobject[i].release.size()-2)
+          );
+          releaseTag = true;
+        }
+
+        std::string dir;
+
+        // deconstruct path from fullpath
+        StringList fulldir = StringOps::split(pathname,"/");
+
+        for (unsigned j = 0; j < fulldir.size() - 1; ++j) {
+          dir += fulldir[j];
+          if (j != fulldir.size() - 2) dir += "/";
+        }
+
+        // define new monitor element
+        if (dbe) {
+          dbe->setCurrentFolder(dir);
+          me4[i] = dbe->bookProfile(metoedmobject[i].object.GetName(),
+                                    &metoedmobject[i].object);
+        } // end define new monitor elements
+
+        // attach taglist
+        TagList tags = metoedmobject[i].tags;
+
+        for (unsigned int j = 0; j < tags.size(); ++j) {
+          dbe->tag(me4[i]->getFullname(),tags[j]);
+        }
+      } // end loop thorugh metoedmobject
+    } // end TProfile creation
+
+    if (classtypes[ii] == "TProfile2D") {
+      edm::Handle<MEtoEDM<TProfile2D> > metoedm;
+      iLumi.getByType(metoedm);
+
+      if (!metoedm.isValid()) {
+        //edm::LogWarning(MsgLoggerCat)
+        //  << "MEtoEDM<TProfile2D> doesn't exist in run";
+        continue;
+      }
+
+      std::vector<MEtoEDM<TProfile2D>::MEtoEDMObject> metoedmobject =
+        metoedm->getMEtoEdmObject();
+
+      me5.resize(metoedmobject.size());
+
+      for (unsigned int i = 0; i < metoedmobject.size(); ++i) {
+
+        me5[i] = 0;
+
+        // get full path of monitor element
+        std::string pathname = metoedmobject[i].name;
+        if (verbosity) std::cout << pathname << std::endl;
+
+        // set the release tag if it has not be yet done
+        if (!releaseTag)
+        {
+          dbe->cd();
+          dbe->bookString(
+            "ReleaseTag",
+            metoedmobject[i].
+            release.substr(1,metoedmobject[i].release.size()-2)
+          );
+          releaseTag = true;
+        }
+
+        std::string dir;
+
+        // deconstruct path from fullpath
+        StringList fulldir = StringOps::split(pathname,"/");
+
+        for (unsigned j = 0; j < fulldir.size() - 1; ++j) {
+          dir += fulldir[j];
+          if (j != fulldir.size() - 2) dir += "/";
+        }
+
+        // define new monitor element
+        if (dbe) {
+          dbe->setCurrentFolder(dir);
+          me5[i] = dbe->bookProfile2D(metoedmobject[i].object.GetName(),
+                                      &metoedmobject[i].object);
+        } // end define new monitor elements
+
+        // attach taglist
+        TagList tags = metoedmobject[i].tags;
+
+        for (unsigned int j = 0; j < tags.size(); ++j) {
+          dbe->tag(me5[i]->getFullname(),tags[j]);
+        }
+      } // end loop thorugh metoedmobject
+    } // end TProfile2D creation
+
+    if (classtypes[ii] == "Double") {
+      edm::Handle<MEtoEDM<double> > metoedm;
+      iLumi.getByType(metoedm);
+
+      if (!metoedm.isValid()) {
+        //edm::LogWarning(MsgLoggerCat)
+        //  << "MEtoEDM<double> doesn't exist in run";
+        continue;
+      }
+
+      std::vector<MEtoEDM<double>::MEtoEDMObject> metoedmobject =
+        metoedm->getMEtoEdmObject();
+
+      me6.resize(metoedmobject.size());
+
+      for (unsigned int i = 0; i < metoedmobject.size(); ++i) {
+
+        me6[i] = 0;
+
+        // get full path of monitor element
+        std::string pathname = metoedmobject[i].name;
+        if (verbosity) std::cout << pathname << std::endl;
+
+        // set the release tag if it has not be yet done
+        if (!releaseTag)
+        {
+          dbe->cd();
+          dbe->bookString(
+            "ReleaseTag",
+            metoedmobject[i].
+            release.substr(1,metoedmobject[i].release.size()-2)
+          );
+          releaseTag = true;
+        }
+
+        std::string dir;
+        std::string name;
+
+        // deconstruct path from fullpath
+
+        StringList fulldir = StringOps::split(pathname,"/");
+        name = *(fulldir.end() - 1);
+
+        for (unsigned j = 0; j < fulldir.size() - 1; ++j) {
+          dir += fulldir[j];
+          if (j != fulldir.size() - 2) dir += "/";
+        }
+
+        // define new monitor element
+        if (dbe) {
+          dbe->setCurrentFolder(dir);
+          me6[i] = dbe->bookFloat(name);
+          me6[i]->Fill(metoedmobject[i].object);
+        } // end define new monitor elements
+
+        // attach taglist
+        TagList tags = metoedmobject[i].tags;
+
+        for (unsigned int j = 0; j < tags.size(); ++j) {
+          dbe->tag(me6[i]->getFullname(),tags[j]);
+        }
+      } // end loop thorugh metoedmobject
+    } // end Float creation
+
+    if (classtypes[ii] == "Int64") {
+      edm::Handle<MEtoEDM<long long> > metoedm;
+      iLumi.getByType(metoedm);
+
+      if (!metoedm.isValid()) {
+        //edm::LogWarning(MsgLoggerCat)
+        //  << "MEtoEDM<long long> doesn't exist in run";
+        continue;
+      }
+
+      std::vector<MEtoEDM<long long>::MEtoEDMObject> metoedmobject =
+        metoedm->getMEtoEdmObject();
+
+      me7.resize(metoedmobject.size());
+
+      for (unsigned int i = 0; i < metoedmobject.size(); ++i) {
+
+        me7[i] = 0;
+
+        // get full path of monitor element
+        std::string pathname = metoedmobject[i].name;
+        if (verbosity) std::cout << pathname << std::endl;
+
+        // set the release tag if it has not be yet done
+        if (!releaseTag)
+        {
+          dbe->cd();
+          dbe->bookString(
+            "ReleaseTag",
+            metoedmobject[i].
+            release.substr(1,metoedmobject[i].release.size()-2)
+          );
+          releaseTag = true;
+        }
+
+        std::string dir;
+        std::string name;
+
+        // deconstruct path from fullpath
+        StringList fulldir = StringOps::split(pathname,"/");
+        name = *(fulldir.end() - 1);
+
+        for (unsigned j = 0; j < fulldir.size() - 1; ++j) {
+          dir += fulldir[j];
+          if (j != fulldir.size() - 2) dir += "/";
+        }
+
+        // define new monitor element
+        if (dbe) {
+          dbe->setCurrentFolder(dir);
+          long long ival = 0;
+          if ( endrun ) {
+            if (name.find("processedEvents") != std::string::npos) {
+              if (MonitorElement* me = dbe->get(dir+"/"+name)) {
+                ival = me->getIntValue();
+              }
+            }
+          }
+          me7[i] = dbe->bookInt(name);
+          me7[i]->Fill(metoedmobject[i].object+ival);
+        } // end define new monitor elements
+
+        // attach taglist
+        TagList tags = metoedmobject[i].tags;
+
+        for (unsigned int j = 0; j < tags.size(); ++j) {
+          dbe->tag(me7[i]->getFullname(),tags[j]);
+        }
+      } // end loop thorugh metoedmobject
+    } // end Int creation
+
+    if (classtypes[ii] == "Int") {
+      edm::Handle<MEtoEDM<int> > metoedm;
+      iLumi.getByType(metoedm);
+
+      if (!metoedm.isValid()) {
+        //edm::LogWarning(MsgLoggerCat)
+        //  << "MEtoEDM<int> doesn't exist in run";
+        continue;
+      }
+
+      std::vector<MEtoEDM<int>::MEtoEDMObject> metoedmobject =
+        metoedm->getMEtoEdmObject();
+
+      me7.resize(metoedmobject.size());
+
+      for (unsigned int i = 0; i < metoedmobject.size(); ++i) {
+
+        me7[i] = 0;
+
+        // get full path of monitor element
+        std::string pathname = metoedmobject[i].name;
+        if (verbosity) std::cout << pathname << std::endl;
+
+        // set the release tag if it has not be yet done
+        if (!releaseTag)
+        {
+          dbe->cd();
+          dbe->bookString(
+            "ReleaseTag",
+            metoedmobject[i].
+            release.substr(1,metoedmobject[i].release.size()-2)
+          );
+          releaseTag = true;
+        }
+
+        std::string dir;
+        std::string name;
+
+        // deconstruct path from fullpath
+        StringList fulldir = StringOps::split(pathname,"/");
+        name = *(fulldir.end() - 1);
+
+        for (unsigned j = 0; j < fulldir.size() - 1; ++j) {
+          dir += fulldir[j];
+          if (j != fulldir.size() - 2) dir += "/";
+        }
+
+        // define new monitor element
+        if (dbe) {
+          dbe->setCurrentFolder(dir);
+          int ival = 0;
+          if ( endrun ) {
+            if (name.find("processedEvents") != std::string::npos) {
+              if (MonitorElement* me = dbe->get(dir+"/"+name)) {
+                ival = me->getIntValue();
+              }
+            }
+          }
+          me7[i] = dbe->bookInt(name);
+          me7[i]->Fill(metoedmobject[i].object+ival);
+        } // end define new monitor elements
+
+        // attach taglist
+        TagList tags = metoedmobject[i].tags;
+
+        for (unsigned int j = 0; j < tags.size(); ++j) {
+          dbe->tag(me7[i]->getFullname(),tags[j]);
+        }
+      } // end loop thorugh metoedmobject
+    } // end Int creation
+
+    if (classtypes[ii] == "String") {
+      edm::Handle<MEtoEDM<TString> > metoedm;
+      iLumi.getByType(metoedm);
 
       if (!metoedm.isValid()) {
         //edm::LogWarning(MsgLoggerCat)
