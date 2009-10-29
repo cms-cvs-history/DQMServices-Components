@@ -6,8 +6,8 @@
  *  Class to take dqm monitor elements and convert into a
  *  ROOT dataformat stored in Run tree of edm file
  *
- *  $Date: 2009/09/30 23:31:47 $
- *  $Revision: 1.16 $
+ *  $Date: 2009/10/28 12:44:13 $
+ *  $Revision: 1.16.4.1 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -69,6 +69,9 @@ public:
   virtual void beginLuminosityBlock(edm::LuminosityBlock&, const edm::EventSetup&);
   virtual void endLuminosityBlock(edm::LuminosityBlock&, const edm::EventSetup&);
 
+  template <class T>
+  void putData(T& iPutTo, bool iLumiOnly, int iRun, int iLumi);
+
   typedef std::vector<uint32_t> TagList;
 
 private:
@@ -78,12 +81,12 @@ private:
   bool deleteAfterCopy;
   std::string path;
 
-  DQMStore *dbe;
+  DQMStore* dbe;
 
   // private statistics information
-  std::map<int,int> count;
-  std::string datatier;
-  bool firstevent;
+  std::map<int,int> iCount;
+  std::string iDataTier;
+  bool iFirstEvent;
 
 }; // end class declaration
 
