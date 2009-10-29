@@ -3,8 +3,8 @@
  *  
  *  See header file for description of class
  *
- *  $Date: 2009/10/13 12:02:38 $
- *  $Revision: 1.27 $
+ *  $Date: 2009/10/28 12:44:13 $
+ *  $Revision: 1.27.4.1 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -327,7 +327,7 @@ MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
 {
 
   int run = iRun.run();
-  int lumi = -1;
+  int lumi = 0;
   std::string release = edm::getReleaseVersion();
 
   std::string MsgLoggerCat = "MEtoEDMConverter_endRun";
