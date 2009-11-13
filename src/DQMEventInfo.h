@@ -4,8 +4,8 @@
 /*
  * \file DQMEventInfo.h
  *
- * $Date: 2008/03/04 22:29:06 $
- * $Revision: 1.10 $
+ * $Date: 2009/11/05 11:44:47 $
+ * $Revision: 1.12 $
  * \author M. Zanetti - INFN Padova
  *
 */
@@ -48,16 +48,19 @@ protected:
 
 private:
 
-  double getUTCtime(timeval* a, timeval* b = NULL);
+//  double getUTCtime(timeval* a, timeval* b = NULL);
 
   DQMStore *dbe_;
 
   edm::ParameterSet parameters_;
-  timeval currentTime_, lastUpdateTime_, lastAvgTime_;
-  timeval runStartTime_;
-  float evtRateWindow_;
-  int evtRateCount_;
-  int pEvent_;
+//  timeval currentTime_, lastUpdateTime_, lastAvgTime_;
+//  timeval runStartTime_;
+//  float evtRateWindow_;
+  double currentTime_, lastUpdateTime_, lastAvgTime_;
+  double runStartTime_;
+  double evtRateWindow_;
+  int64_t evtRateCount_;
+  int64_t pEvent_;
 
   //////////////////////////////////////////////////////////////////
   ///These MEs are filled with the info from the most recent event 
