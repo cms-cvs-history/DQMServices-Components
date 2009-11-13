@@ -33,7 +33,7 @@ std::string
 DQMFileSaver::getShowTags(void)
 {
    TString out;
-   FILE *pipe = gSystem->OpenPipe("showtags u -t", "r");
+   FILE *pipe = gSystem->OpenPipe("showtags -u -t", "r");
 
    TString line;
    while (line.Gets(pipe,true)) {
@@ -184,6 +184,7 @@ DQMFileSaver::DQMFileSaver(const edm::ParameterSet &ps)
     dirName_ ("."),
     version_ (1),
     runIsComplete_ (false),
+    makeProvInfo_ (false),
     saveByLumiSection_ (-1),
     saveByEvent_ (-1),
     saveByMinute_ (-1),
@@ -194,7 +195,6 @@ DQMFileSaver::DQMFileSaver(const edm::ParameterSet &ps)
     saveReferenceQMin_ (dqm::qstatus::STATUS_OK),
     forceRunNumber_ (-1),
     fileBaseName_ (""),
-    makeProvInfo_ (false),
     dbe_ (&*edm::Service<DQMStore>()),
     irun_ (-1),
     ilumi_ (-1),
@@ -329,8 +329,9 @@ DQMFileSaver::DQMFileSaver(const edm::ParameterSet &ps)
 
   
   // Set up base file name and determine the start time.
-  char version[7];
+  char version[8];
   sprintf(version, "_V%04d_", int(version_));
+  version[7]='\0';
   fileBaseName_ = dirName_ + "/" + producer_ + version;
   gettimeofday(&start_, 0);
   saved_ = start_;
