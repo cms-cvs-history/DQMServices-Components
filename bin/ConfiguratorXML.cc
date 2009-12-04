@@ -257,18 +257,26 @@ std::string ConfiguratorXML::getSinceAndTagFromMetaData()
   // Get MetaData node and extract info from it
   DOMNodeList * metadataNode = elementRoot->getElementsByTagName(XMLString::transcode("MetaData"))  ;
 
-  // Only one node, get first child!!!
-  DOMNode * currentNode = metadataNode->item(0)  ;
-  if( currentNode->getNodeType() &&  // true is not NULL
-      currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is a Specific SubDetector Element
+  if(!metadataNode->getLength())
     {
-      // Found node which is an Element. Re-cast node as element
-      DOMElement * currentElement = dynamic_cast< xercesc::DOMElement* >( currentNode )  ;
-      char since[10] ;
-      sprintf(since, "%.8d", atoi( XMLString::transcode( currentElement->getAttribute(XMLString::transcode  ( "since" ) ) ) ) ) ;
-      result += "since_" +  std::string(since) ;
-      std::string tmp( XMLString::transcode( currentElement->getAttribute(XMLString::transcode  ( "tag" ) ) ) ) ;
-      result += "_" + tmp ;
+      std::cout << "Warning, no metadata found, using fake." << std::endl ;
+      result += std::string("since_00000001_fakelocaltagNoMetaData") ;
+    }
+  else
+    {
+      // Only one node, get first child!!!
+      DOMNode * currentNode = metadataNode->item(0)  ;
+      if( currentNode->getNodeType() &&  // true is not NULL
+	  currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is a Specific SubDetector Element
+	{
+	  // Found node which is an Element. Re-cast node as element
+	  DOMElement * currentElement = dynamic_cast< xercesc::DOMElement* >( currentNode )  ;
+	  char since[10] ;
+	  sprintf(since, "%.8d", atoi( XMLString::transcode( currentElement->getAttribute(XMLString::transcode  ( "since" ) ) ) ) ) ;
+	  result += "since_" +  std::string(since) ;
+	  std::string tmp( XMLString::transcode( currentElement->getAttribute(XMLString::transcode  ( "tag" ) ) ) ) ;
+	  result += "_" + tmp ;
+	}
     }
   return result ;
 }
@@ -298,18 +306,30 @@ void ConfiguratorXML::getMetadataInfo(std::vector<std::pair<std::string,std::str
   std::vector<std::string>::iterator it  = metaAttributes.begin() ;
   std::vector<std::string>::iterator ite = metaAttributes.end() ;
 
-  // Only one node, get first child!!!
-  DOMNode * currentNode = metadataNode->item(0)  ;
-  if( currentNode->getNodeType() &&  // true is not NULL
-      currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is a Specific SubDetector Element
+  if(! metadataNode->getLength())
     {
-      // Found node which is an Element. Re-cast node as element
-      DOMElement * currentElement = dynamic_cast< xercesc::DOMElement* >( currentNode )  ;
-
-      for(; it != ite; ++it)
+      std::cout << "Warning, no MetaData found, using fake"<< std::endl ;
+      metainfo.push_back(make_pair(std::string("destDB")  , std::string("sqlite_file:fakedb.db")));
+      metainfo.push_back(make_pair(std::string("tag")     , std::string("faketag")));
+      metainfo.push_back(make_pair(std::string("since")   , std::string("1")));
+      metainfo.push_back(make_pair(std::string("inputtag"), std::string("")));
+      metainfo.push_back(make_pair(std::string("usertext"), std::string("")));
+    }
+  else 
+    {
+      // Only one node, get first child!!!
+      DOMNode * currentNode = metadataNode->item(0)  ;
+      if( currentNode->getNodeType() &&  // true is not NULL
+	  currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is a Specific SubDetector Element
 	{
-	  std::string tmp( XMLString::transcode( currentElement->getAttribute(XMLString::transcode  ( it->c_str()   ) ) ) ) ;
-	  metainfo.push_back(make_pair(std::string(*it), tmp));
+	  // Found node which is an Element. Re-cast node as element
+	  DOMElement * currentElement = dynamic_cast< xercesc::DOMElement* >( currentNode )  ;
+	  
+	  for(; it != ite; ++it)
+	    {
+	      std::string tmp( XMLString::transcode( currentElement->getAttribute(XMLString::transcode  ( it->c_str()   ) ) ) ) ;
+	      metainfo.push_back(make_pair(std::string(*it), tmp));
+	    }
 	}
     }
 }
