@@ -37,6 +37,7 @@ class ConfiguratorXML : public Configurator
   virtual void getHistosToFetch(std::vector<std::string> & ) ;
   virtual void  getHistosToFetchAndSource(std::map<std::string, std::vector<std::string> > &) ;
   virtual std::string getDatasetAndSoftwareVersionAndTag() ;
+  virtual std::string getSinceAndTagFromMetaData() ;
   virtual void getMetadataInfo(std::vector<std::pair<std::string, std::string> > & metainfo) ;
   void    saveFinalXML(std::string filename) ;
   virtual ~ConfiguratorXML() ; 

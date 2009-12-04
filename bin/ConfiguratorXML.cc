@@ -2,6 +2,9 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <stdexcept>
 
+#include <stdio.h>
+#include <stdlib.h>
+
 XERCES_CPP_NAMESPACE_USE
 
 ConfiguratorXML::ConfiguratorXML(std::string filename):_ConfigFileParser(0),_filename(filename)
@@ -219,6 +222,7 @@ void ConfiguratorXML::getHistosToFetchAndSource( std::map<std::string, std::vect
 
 std::string ConfiguratorXML::getDatasetAndSoftwareVersionAndTag()
 {
+  initialize() ;
   std::string result("") ;
   // no need to free this pointer - owned by the parent parser object
   DOMDocument* xmlDoc = _ConfigFileParser->getDocument();
@@ -239,8 +243,39 @@ std::string ConfiguratorXML::getDatasetAndSoftwareVersionAndTag()
   return result ;
 }
 
+std::string ConfiguratorXML::getSinceAndTagFromMetaData()
+{
+  initialize() ;
+  std::string result("") ;
+  // no need to free this pointer - owned by the parent parser object
+  DOMDocument* xmlDoc = _ConfigFileParser->getDocument();
+  
+  // Get the top-level element: Name is "root". No attributes for "root"
+  DOMElement * elementRoot = xmlDoc->getDocumentElement() ;
+  if( !elementRoot ) throw(std::runtime_error( "empty XML document" ));
+  
+  // Get MetaData node and extract info from it
+  DOMNodeList * metadataNode = elementRoot->getElementsByTagName(XMLString::transcode("MetaData"))  ;
+
+  // Only one node, get first child!!!
+  DOMNode * currentNode = metadataNode->item(0)  ;
+  if( currentNode->getNodeType() &&  // true is not NULL
+      currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is a Specific SubDetector Element
+    {
+      // Found node which is an Element. Re-cast node as element
+      DOMElement * currentElement = dynamic_cast< xercesc::DOMElement* >( currentNode )  ;
+      char since[10] ;
+      sprintf(since, "%.8d", atoi( XMLString::transcode( currentElement->getAttribute(XMLString::transcode  ( "since" ) ) ) ) ) ;
+      result += "since_" +  std::string(since) ;
+      std::string tmp( XMLString::transcode( currentElement->getAttribute(XMLString::transcode  ( "tag" ) ) ) ) ;
+      result += "_" + tmp ;
+    }
+  return result ;
+}
+
 void ConfiguratorXML::getMetadataInfo(std::vector<std::pair<std::string,std::string > > &metainfo)
 {
+  initialize() ;
   // no need to free this pointer - owned by the parent parser object
   DOMDocument* xmlDoc = _ConfigFileParser->getDocument();
   
@@ -281,6 +316,7 @@ void ConfiguratorXML::getMetadataInfo(std::vector<std::pair<std::string,std::str
 
 void ConfiguratorXML::saveFinalXML(std::string filename)
 {
+  initialize() ;
   DOMDocument * xmlDoc = _ConfigFileParser->getDocument();
   // construct the DOMWriter
   DOMImplementation* impl =

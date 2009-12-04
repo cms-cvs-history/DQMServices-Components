@@ -15,32 +15,22 @@
 // BOOST RegExp
 #include "boost/regex.hpp"
 
+std::string get_uuidgen(char* cmd) ;
+
 // -------------------------------------------------------------------
 // Main program.
 int main(int argc, char **argv)
 {
   // Check command line arguments.
-  char *output = (argc > 1 ? argv[1] : 0);
-  if (! output)
-    {
-      std::cerr << "Usage: " << argv[0]
-		<< " OUTPUT-FILE CFGFILE\n";
-      return 1;
-    }
-  char *cfgfile = (argc > 2 ? argv[2] : 0);
+  char *cfgfile = (argc > 1 ? argv[1] : 0);
   if (! cfgfile)
     {
       std::cerr << "Usage: " << argv[0]
-		<< " OUTPUT-FILE CFGFILE\n";
+		<< " XML_FILE [OUTPUT_ ROOT_FILE]\n";
       return 1;
     }
-
-  std::string rootOutputFile(output) ;
-  if(rootOutputFile.find(".root") == std::string::npos)
-    rootOutputFile += ".root" ;
-  std::cout << "\nUsing     Config file: " << cfgfile 
-	    << "\nUsing Output     file: " << rootOutputFile 
-	    << std::endl ;
+  std::string rootOutputFile ;
+  char *output = (argc > 2 ? argv[2] : 0);
 
   // Process each file given as argument.
   edm::ParameterSet emptyps;
@@ -51,7 +41,30 @@ int main(int argc, char **argv)
   DQMStore store(emptyps);
   store.setVerbose(0) ;
 
+  // Initialize configurator parser
   Configurator cfg(cfgfile) ;
+
+  if (! output)
+    {
+      rootOutputFile = cfg.getSinceAndTagFromMetaData() ;
+      if( system("which uuidgen &> /dev/null") == 0)
+	{
+	  rootOutputFile += std::string("@") ;
+	  rootOutputFile += get_uuidgen("uuidgen -t") ;
+	}
+      rootOutputFile += std::string(".root") ;
+    }
+  else 
+    rootOutputFile = std::string(output) ;
+
+  if(rootOutputFile.find(".root") == std::string::npos)
+    rootOutputFile += ".root" ;
+  std::cout << "\nUsing     Config file: " << cfgfile 
+	    << "\nUsing Output     file: " << rootOutputFile 
+	    << std::endl ;
+
+
+
   //   std::vector<std::string>  refHistos = cfg->getHistosToFetch() ;
   std::map<std::string, std::vector<std::string> > refHistosAndSource ;
   cfg.getHistosToFetchAndSource( refHistosAndSource ) ;
@@ -128,11 +141,6 @@ int main(int argc, char **argv)
 	}
     }
 
-  // Compose the correct ROOT & METADATA output file name, with DataSet and 
-  // SoftwareVersion as specified into the XML configuration file
-  std::string toBeAppended(cfg.getDatasetAndSoftwareVersionAndTag()) ;
-  toBeAppended += ".root" ;
-  rootOutputFile.replace(rootOutputFile.find(".root"), toBeAppended.length(), toBeAppended) ;
   std::vector<MonitorElement*> toBeSaved = store.getAllContents("") ;
   unsigned int total = toBeSaved.size() ;
   for(unsigned int j = 0 ; j < total ; ++j)
@@ -168,4 +176,20 @@ int main(int argc, char **argv)
 
   return 0;
 }
+
+std::string get_uuidgen(char* cmd) {
+  FILE* pipe = popen(cmd, "r");
+  if (!pipe) return "ERROR";
+  char buffer[128];
+  std::string result = "";
+  while(!feof(pipe)) {
+    if(fgets(buffer, 128, pipe) != NULL)
+      result += buffer;
+  }
+  result.erase(result.length()-1) ; // get rid of final \n character
+  
+  pclose(pipe);
+  return result;
+}
+
   
