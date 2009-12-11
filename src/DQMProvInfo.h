@@ -4,9 +4,9 @@
 /*
  * \file DQMProvInfo.h
  *
- * $Date: 2008/07/06 17:32:30 $
- * $Revision: 1.11 $
- * \author M. Zanetti - INFN Padova
+ * $Date: 2009/12/11 01:08:36 $
+ * $Revision: 1.3 $
+ * \author A.Meyer - DESY
  *
 */
 
@@ -45,17 +45,25 @@ protected:
   /// Analyze
   void analyze(const edm::Event& e, const edm::EventSetup& c);
   void beginRun(const edm::Run& r, const edm::EventSetup& c) ;
+  void endLuminosityBlock(const edm::LuminosityBlock& l, const edm::EventSetup& c);
 
 private:
 
   std::string getShowTags(void);
   void makeProvInfo();  
+  void makeDcsInfo(const edm::Event& e);  
+  void makeGtInfo(const edm::Event& e);
 
   DQMStore *dbe_;
 
   edm::ParameterSet parameters_;
   
-  std::string currentfolder_;
+  std::string provinfofolder_;
+  std::string subsystemname_;
+  bool makedcsinfo_;
+  
+  unsigned int dcsword_;
+  bool physDecl_;
 
    // histograms
   MonitorElement * versCMSSW_ ;
@@ -69,6 +77,8 @@ private:
   MonitorElement * isComplete_;
   MonitorElement * fileVersion_;
   
+  MonitorElement * reportSummary_;
+  MonitorElement * reportSummaryMap_;
   
 };
 
