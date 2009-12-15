@@ -15,7 +15,7 @@
 // BOOST RegExp
 #include "boost/regex.hpp"
 
-std::string get_uuidgen(char* cmd) ;
+std::string get_uuidgen(std::string) ;
 
 // -------------------------------------------------------------------
 // Main program.
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
       if( system("which uuidgen &> /dev/null") == 0)
 	{
 	  rootOutputFile += std::string("@") ;
-	  rootOutputFile += get_uuidgen("uuidgen -t") ;
+	  rootOutputFile += get_uuidgen(std::string("uuidgen -t")) ;
 	}
       rootOutputFile += std::string(".root") ;
     }
@@ -177,8 +177,8 @@ int main(int argc, char **argv)
   return 0;
 }
 
-std::string get_uuidgen(char* cmd) {
-  FILE* pipe = popen(cmd, "r");
+std::string get_uuidgen(std::string cmd) {
+  FILE* pipe = popen(cmd.c_str(), "r");
   if (!pipe) return "ERROR";
   char buffer[128];
   std::string result = "";
