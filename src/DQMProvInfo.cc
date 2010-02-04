@@ -2,8 +2,8 @@
  * \file DQMProvInfo.cc
  * \author A.Raval / A.Meyer - DESY
  * Last Update:
- * $Date: 2009/12/13 14:15:02 $
- * $Revision: 1.10 $
+ * $Date: 2009/12/15 23:07:13 $
+ * $Revision: 1.11 $
  * $Author: ameyer $
  *
  */
@@ -12,8 +12,8 @@
 #include <TSystem.h>
 #include "DataFormats/Scalers/interface/DcsStatus.h"
 #include "DataFormats/Common/interface/Handle.h"
-#include "DataFormats/L1GlobalTrigger/interface/L1GtFdlWord.h"
-#include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutRecord.h"
+//#include "DataFormats/L1GlobalTrigger/interface/L1GtFdlWord.h"
+//#include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutRecord.h"
 
 // Framework
 
@@ -132,17 +132,18 @@ DQMProvInfo::endLuminosityBlock(const edm::LuminosityBlock& l, const edm::EventS
   reportSummaryMap_->setBinContent(nlumi,23+1,-1.);
 
   // fill physics decl. bit in y bin 10.
+  reportSummaryMap_->setBinContent(1,24+1,-1.);
   if (physDecl_) 
   {
-    reportSummary_->Fill(1.); 
-    reportSummaryMap_->setBinContent(nlumi,24+1,1.);
+  //  reportSummary_->Fill(1.); 
+  //  reportSummaryMap_->setBinContent(nlumi,24+1,1.);
     if (nlumi < 200) 
       reportSummaryMap_->setBinContent(nlumi+1,24+1,-1.);
   }
   else
   {
-    reportSummary_->Fill(0.); 
-    reportSummaryMap_->setBinContent(nlumi,24+1,0.);
+  //  reportSummary_->Fill(0.); 
+  //  reportSummaryMap_->setBinContent(nlumi,24+1,0.);
     if (nlumi < 200) 
       reportSummaryMap_->setBinContent(nlumi+1,24+1,-1.);
   }
@@ -269,7 +270,7 @@ void
 DQMProvInfo::makeGtInfo(const edm::Event& e)
 {
 
-  edm::Handle<L1GlobalTriggerReadoutRecord> gtrr_handle;
+/*  edm::Handle<L1GlobalTriggerReadoutRecord> gtrr_handle;
   e.getByLabel("gtDigis", gtrr_handle);
   L1GlobalTriggerReadoutRecord const* gtrr = gtrr_handle.product();
   L1GtFdlWord fdlWord ; 
@@ -283,6 +284,7 @@ DQMProvInfo::makeGtInfo(const edm::Event& e)
 
   // cout << "phys decl. bit =" << static_cast<int>(fdlWord.physicsDeclared()) << endl;
   if (fdlWord.physicsDeclared() !=1) physDecl_=false;
+  */
 
   return;
 }
