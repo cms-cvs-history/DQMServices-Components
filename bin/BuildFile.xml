@@ -1,0 +1,8 @@
+<flags   CPPFLAGS="-DWITHOUT_CMS_FRAMEWORK=1"/>
+<use   name="FWCore/Framework"/>
+<use   name="FWCore/ParameterSet"/>
+<use   name="DQMServices/Core"/>
+<use   name="xerces-c"/>
+<use   name="boost"/>
+<bin   name="DQMAssembleReferenceHistos" file="AssembleReferenceHistos.cpp Configurator.cc ConfiguratorXML.cc">
+</bin>
