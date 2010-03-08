@@ -39,7 +39,7 @@ int main(int argc, char **argv)
   edm::ServiceRegistry::Operate operate(services);   
   //   edm::ParameterSet ps;
   DQMStore store(emptyps);
-  store.setVerbose(0) ;
+  store.setVerbose(2) ;
 
   // Initialize configurator parser
   Configurator cfg(cfgfile) ;
@@ -82,6 +82,7 @@ int main(int argc, char **argv)
 	  std::cout << "Working on " << i->first << std::endl ;
 	  std::cout << "Requested ref histos " << i->second.size() << std::endl ;
 	  store.open(i->first);
+	  store.cd("/") ;
 	  std::cout << i->first << std::endl ;
 	  std::vector<MonitorElement*> allHistos = store.getAllContents("") ;
 	  std::cout << "I discovere a total of " << allHistos.size() << " ME" << std::endl ;
@@ -94,14 +95,14 @@ int main(int argc, char **argv)
 		std::cout << "[" << k << "/" << allHistosSize << "]"<< std::endl ;
 	      MonitorElement &me = *allHistos[k];
 	      std::string thisHisto(me.getFullname()) ;
-	      // 	      std::cout << "Analizing " << me.getFullname() << std::endl ;
+// 	      std::cout << "Analizing " << me.getFullname() << std::endl ;
 	      bool remove = true  ;
 	      // remove Reference Histos by definition ...
 	      if (!(thisHisto.size() > 10 && thisHisto.compare(0, 10, "Reference/") == 0) )
 		{
 		  for(unsigned int j = 0 ; j < refHistos.size() ; ++j)
 		    {
-//  		      std::cout << "\tComparing " << thisHisto << " against " << refHistos[j] << std::endl ;
+//   		      std::cout << "\tComparing " << thisHisto << " against " << refHistos[j] << std::endl ;
 		      boost::regex rge(refHistos[j].c_str()) ;
 		      boost::smatch what;
 		      if(boost::regex_match(thisHisto, what, rge))
@@ -128,8 +129,13 @@ int main(int argc, char **argv)
 			}
 		    }
 		  if(!skip)
-		    store.removeElement(me.getFullname()) ;
-		  // 	      std::cout << "Removing " << thisHisto << "\tsize is " << allHistos.size() << std::endl ;
+		    {
+		      store.removeElement(me.getPathname(), me.getName()) ;
+//  		      std::cout << "Removing "  << me.getName() 
+//  				<< "from "      << me.getPathname() 
+// 				<< "\tsize is " << allHistos.size() 
+// 				<< std::endl ;
+		    }
 		}
 	    }
 	}

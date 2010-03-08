@@ -1,0 +1,7 @@
+2010-03-08  Marco Rovere  <rovere@lxbuild150.cern.ch>
+
+	* AssembleReferenceHistos.cpp (main): fixed a problem in deleting non-matching MEs from the main
+	source file(s). The new methods that is called is DQMStore.removeElement(std::string path, std::string name),
+	where path and name are extracted directly from the ME to be deleted.
+	Tested on 3_5_0, it should work on higher releases transparently.
+
