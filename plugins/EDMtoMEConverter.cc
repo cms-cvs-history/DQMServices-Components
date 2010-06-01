@@ -2,8 +2,8 @@
  *
  *  See header file for description of class
  *
- *  $Date: 2010/03/25 08:10:12 $
- *  $Revision: 1.30 $
+ *  $Date: 2010/05/15 14:46:56 $
+ *  $Revision: 1.32 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -127,10 +127,6 @@ void EDMtoMEConverter::beginLuminosityBlock(const edm::LuminosityBlock& iLumi, c
 void EDMtoMEConverter::endLuminosityBlock(const edm::LuminosityBlock& iLumi, const edm::EventSetup& iSetup)
 {
   if (convertOnEndLumi) {
-    // old version, run products extraction
-    //const edm::Run& iRun = iLumi.getRun();
-    //getData(iRun, false);
-    // new version, luminosity products extraction
     getData(iLumi, false);
   }
 }
@@ -197,9 +193,18 @@ EDMtoMEConverter::getData(T& iGetFrom, bool iEndRun)
 
         // define new monitor element
         if (dbe) {
-          dbe->setCurrentFolder(dir);
-          me1[i] = dbe->book1D(metoedmobject[i].object.GetName(),
-                               &metoedmobject[i].object);
+          me1[i] = dbe->get(dir+"/"+metoedmobject[i].object.GetName());
+          if (me1[i] && me1[i]->getTH1F() && me1[i]->getTH1F()->TestBit(TH1::kCanRebin) == true) {
+            TList list;
+            list.Add(&metoedmobject[i].object);
+            if (me1[i]->getTH1F()->Merge(&list) == -1)
+              std::cout << "ERROR EDMtoMEConverter::getData(): merge failed for '"
+                        << metoedmobject[i].object.GetName() << "'" <<  std::endl;
+          } else {
+            dbe->setCurrentFolder(dir);
+            me1[i] = dbe->book1D(metoedmobject[i].object.GetName(),
+                                 &metoedmobject[i].object);
+          }
           if (!iEndRun) me1[i]->setLumiFlag();
         } // end define new monitor elements
 
@@ -259,9 +264,18 @@ EDMtoMEConverter::getData(T& iGetFrom, bool iEndRun)
 
         // define new monitor element
         if (dbe) {
-          dbe->setCurrentFolder(dir);
-          me1[i] = dbe->book1S(metoedmobject[i].object.GetName(),
-                               &metoedmobject[i].object);
+          me1[i] = dbe->get(dir+"/"+metoedmobject[i].object.GetName());
+          if (me1[i] && me1[i]->getTH1S() && me1[i]->getTH1S()->TestBit(TH1::kCanRebin) == true) {
+            TList list;
+            list.Add(&metoedmobject[i].object);
+            if (me1[i]->getTH1S()->Merge(&list) == -1)
+              std::cout << "ERROR EDMtoMEConverter::getData(): merge failed for '"
+                        << metoedmobject[i].object.GetName() << "'" <<  std::endl;
+          } else {
+            dbe->setCurrentFolder(dir);
+            me1[i] = dbe->book1S(metoedmobject[i].object.GetName(),
+                                 &metoedmobject[i].object);
+          }
           if (!iEndRun) me1[i]->setLumiFlag();
         } // end define new monitor elements
 
@@ -321,9 +335,18 @@ EDMtoMEConverter::getData(T& iGetFrom, bool iEndRun)
 
         // define new monitor element
         if (dbe) {
-          dbe->setCurrentFolder(dir);
-          me1[i] = dbe->book1DD(metoedmobject[i].object.GetName(),
-                               &metoedmobject[i].object);
+          me1[i] = dbe->get(dir+"/"+metoedmobject[i].object.GetName());
+          if (me1[i] && me1[i]->getTH1D() && me1[i]->getTH1D()->TestBit(TH1::kCanRebin) == true) {
+            TList list;
+            list.Add(&metoedmobject[i].object);
+            if (me1[i]->getTH1D()->Merge(&list) == -1)
+              std::cout << "ERROR EDMtoMEConverter::getData(): merge failed for '"
+                        << metoedmobject[i].object.GetName() << "'" <<  std::endl;
+          } else {
+            dbe->setCurrentFolder(dir);
+            me1[i] = dbe->book1DD(metoedmobject[i].object.GetName(),
+                                  &metoedmobject[i].object);
+          }
           if (!iEndRun) me1[i]->setLumiFlag();
         } // end define new monitor elements
 
@@ -383,9 +406,18 @@ EDMtoMEConverter::getData(T& iGetFrom, bool iEndRun)
 
         // define new monitor element
         if (dbe) {
-          dbe->setCurrentFolder(dir);
-          me2[i] = dbe->book2D(metoedmobject[i].object.GetName(),
-                               &metoedmobject[i].object);
+          me2[i] = dbe->get(dir+"/"+metoedmobject[i].object.GetName());
+          if (me2[i] && me2[i]->getTH2F() && me2[i]->getTH2F()->TestBit(TH1::kCanRebin) == true) {
+            TList list;
+            list.Add(&metoedmobject[i].object);
+            if (me2[i]->getTH2F()->Merge(&list) == -1)
+              std::cout << "ERROR EDMtoMEConverter::getData(): merge failed for '"
+                        << metoedmobject[i].object.GetName() << "'" <<  std::endl;
+          } else {
+            dbe->setCurrentFolder(dir);
+            me2[i] = dbe->book2D(metoedmobject[i].object.GetName(),
+                                 &metoedmobject[i].object);
+          }
           if (!iEndRun) me2[i]->setLumiFlag();
         } // end define new monitor elements
 
@@ -445,9 +477,18 @@ EDMtoMEConverter::getData(T& iGetFrom, bool iEndRun)
 
         // define new monitor element
         if (dbe) {
-          dbe->setCurrentFolder(dir);
-          me2[i] = dbe->book2S(metoedmobject[i].object.GetName(),
-                               &metoedmobject[i].object);
+          me2[i] = dbe->get(dir+"/"+metoedmobject[i].object.GetName());
+          if (me2[i] && me2[i]->getTH2S() && me2[i]->getTH2S()->TestBit(TH1::kCanRebin) == true) {
+            TList list;
+            list.Add(&metoedmobject[i].object);
+            if (me2[i]->getTH2S()->Merge(&list) == -1)
+              std::cout << "ERROR EDMtoMEConverter::getData(): merge failed for '"
+                        << metoedmobject[i].object.GetName() << "'" <<  std::endl;
+          } else {
+            dbe->setCurrentFolder(dir);
+            me2[i] = dbe->book2S(metoedmobject[i].object.GetName(),
+                                 &metoedmobject[i].object);
+          }
           if (!iEndRun) me2[i]->setLumiFlag();
         } // end define new monitor elements
 
@@ -507,9 +548,18 @@ EDMtoMEConverter::getData(T& iGetFrom, bool iEndRun)
 
         // define new monitor element
         if (dbe) {
-          dbe->setCurrentFolder(dir);
-          me2[i] = dbe->book2DD(metoedmobject[i].object.GetName(),
-                               &metoedmobject[i].object);
+          me2[i] = dbe->get(dir+"/"+metoedmobject[i].object.GetName());
+          if (me2[i] && me2[i]->getTH2D() && me2[i]->getTH2D()->TestBit(TH1::kCanRebin) == true) {
+            TList list;
+            list.Add(&metoedmobject[i].object);
+            if (me2[i]->getTH2D()->Merge(&list) == -1)
+              std::cout << "ERROR EDMtoMEConverter::getData(): merge failed for '"
+                        << metoedmobject[i].object.GetName() << "'" <<  std::endl;
+          } else {
+            dbe->setCurrentFolder(dir);
+            me2[i] = dbe->book2DD(metoedmobject[i].object.GetName(),
+                                  &metoedmobject[i].object);
+          }
           if (!iEndRun) me2[i]->setLumiFlag();
         } // end define new monitor elements
 
@@ -569,9 +619,18 @@ EDMtoMEConverter::getData(T& iGetFrom, bool iEndRun)
 
         // define new monitor element
         if (dbe) {
-          dbe->setCurrentFolder(dir);
-          me3[i] = dbe->book3D(metoedmobject[i].object.GetName(),
-                               &metoedmobject[i].object);
+          me3[i] = dbe->get(dir+"/"+metoedmobject[i].object.GetName());
+          if (me3[i] && me3[i]->getTH3F() && me3[i]->getTH3F()->TestBit(TH1::kCanRebin) == true) {
+            TList list;
+            list.Add(&metoedmobject[i].object);
+            if (me3[i]->getTH3F()->Merge(&list) == -1)
+              std::cout << "ERROR EDMtoMEConverter::getData(): merge failed for '"
+                        << metoedmobject[i].object.GetName() << "'" <<  std::endl;
+          } else {
+            dbe->setCurrentFolder(dir);
+            me3[i] = dbe->book3D(metoedmobject[i].object.GetName(),
+                                 &metoedmobject[i].object);
+          }
           if (!iEndRun) me3[i]->setLumiFlag();
         } // end define new monitor elements
 
@@ -629,11 +688,21 @@ EDMtoMEConverter::getData(T& iGetFrom, bool iEndRun)
           if (j != fulldir.size() - 2) dir += "/";
         }
 
+std::string name = metoedmobject[i].object.GetName();
         // define new monitor element
         if (dbe) {
-          dbe->setCurrentFolder(dir);
-          me4[i] = dbe->bookProfile(metoedmobject[i].object.GetName(),
+          me4[i] = dbe->get(dir+"/"+metoedmobject[i].object.GetName());
+          if (me4[i] && me4[i]->getTProfile() && me4[i]->getTProfile()->TestBit(TH1::kCanRebin) == true) {
+            TList list;
+            list.Add(&metoedmobject[i].object);
+            if (me4[i]->getTProfile()->Merge(&list) == -1)
+              std::cout << "ERROR EDMtoMEConverter::getData(): merge failed for '"
+                      << metoedmobject[i].object.GetName() << "'" <<  std::endl;
+          } else {
+            dbe->setCurrentFolder(dir);
+            me4[i] = dbe->bookProfile(metoedmobject[i].object.GetName(),
                                     &metoedmobject[i].object);
+          }
           if (!iEndRun) me4[i]->setLumiFlag();
         } // end define new monitor elements
 
@@ -693,9 +762,18 @@ EDMtoMEConverter::getData(T& iGetFrom, bool iEndRun)
 
         // define new monitor element
         if (dbe) {
-          dbe->setCurrentFolder(dir);
-          me5[i] = dbe->bookProfile2D(metoedmobject[i].object.GetName(),
-                                      &metoedmobject[i].object);
+          me5[i] = dbe->get(dir+"/"+metoedmobject[i].object.GetName());
+          if (me5[i] && me5[i]->getTProfile2D() && me5[i]->getTProfile2D()->TestBit(TH1::kCanRebin) == true) {
+            TList list;
+            list.Add(&metoedmobject[i].object);
+            if (me5[i]->getTProfile2D()->Merge(&list) == -1)
+              std::cout << "ERROR EDMtoMEConverter::getData(): merge failed for '"
+                        << metoedmobject[i].object.GetName() << "'" <<  std::endl;
+          } else {
+            dbe->setCurrentFolder(dir);
+            me5[i] = dbe->bookProfile2D(metoedmobject[i].object.GetName(),
+                                        &metoedmobject[i].object);
+          }
           if (!iEndRun) me5[i]->setLumiFlag();
         } // end define new monitor elements
 
