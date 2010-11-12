@@ -6,6 +6,9 @@
 #include "DQMServices/Core/interface/MonitorElement.h"
 #include <iostream>
 #include <fstream>
+#include "classlib/utils/RegexpMatch.h"
+#include "classlib/utils/Regexp.h"
+#include "classlib/utils/StringOps.h"
 
 #include <errno.h>
 #include <sys/types.h>
@@ -83,61 +86,47 @@ int main(int argc, char **argv)
 	  std::cout << "Requested ref histos " << i->second.size() << std::endl ;
 	  store.open(i->first);
 	  store.cd("/") ;
-	  std::cout << i->first << std::endl ;
 	  std::vector<MonitorElement*> allHistos = store.getAllContents("") ;
-	  std::cout << "I discovere a total of " << allHistos.size() << " ME" << std::endl ;
-	  // Select histograms to keep from configuration files and remove all others that do not match
-	  unsigned int allHistosSize = allHistos.size() ;
-	  //       std::vector<MonitorElement*>::iterator e = allHistos.end() ;
-	  for(unsigned int k = 0 ; k < allHistosSize  ; ++k)
+	  std::cout << "I discovered a total of " << allHistos.size() << " ME" << std::endl ;
+	  for(unsigned int j = 0 ; j < refHistos.size() ; ++j)
+	  {
+	    std::vector<MonitorElement*> res = store.getMatchingContents(refHistos[j], lat::Regexp::Perl);
+	    std::vector<MonitorElement*>::iterator ime = res.begin() ;
+	    std::vector<MonitorElement*>::iterator eme = res.end() ;
+	    for (; ime!=eme; ++ime)
 	    {
-	      if( k%10000 == 0 )
-		std::cout << "[" << k << "/" << allHistosSize << "]"<< std::endl ;
-	      MonitorElement &me = *allHistos[k];
-	      std::string thisHisto(me.getFullname()) ;
-// 	      std::cout << "Analizing " << me.getFullname() << std::endl ;
-	      bool remove = true  ;
-	      // remove Reference Histos by definition ...
-	      if (!(thisHisto.size() > 10 && thisHisto.compare(0, 10, "Reference/") == 0) )
-		{
-		  for(unsigned int j = 0 ; j < refHistos.size() ; ++j)
-		    {
-//   		      std::cout << "\tComparing " << thisHisto << " against " << refHistos[j] << std::endl ;
-		      boost::regex rge(refHistos[j].c_str()) ;
-		      boost::smatch what;
-		      if(boost::regex_match(thisHisto, what, rge))
-			{
-			  std::cout << "I've got a match on " << thisHisto  << " and " << refHistos[j] << std::endl ;
-			  remove = false ;
-			  toKeepFromPreviousSource.push_back(allHistos[k]) ;
-			  break ;
-			  exit(0) ;
-			}
-		    }
-		}
-	      if(remove)
-		{
-		  std::vector<MonitorElement*>::iterator ime = toKeepFromPreviousSource.begin() ;
-		  std::vector<MonitorElement*>::iterator eme = toKeepFromPreviousSource.end() ;
-		  bool skip = false ;
-		  for(; ime != eme ; ++ime)
-		    {
-		      if(*ime == allHistos[k])
-			{
-			  skip = true ;
-			  break ;
-			}
-		    }
-		  if(!skip)
-		    {
-		      store.removeElement(me.getPathname(), me.getName()) ;
-//  		      std::cout << "Removing "  << me.getName() 
-//  				<< "from "      << me.getPathname() 
-// 				<< "\tsize is " << allHistos.size() 
-// 				<< std::endl ;
-		    }
-		}
+	      // skip reference histograms
+ 	      if ( (*ime)->getPathname().compare(0, 10, "Reference/") != 0)
+	      {
+		std::cout << "Match against: " << (*ime)->getPathname()
+			  << " " << (*ime)->getName() << std::endl;
+		toKeepFromPreviousSource.push_back(*ime) ;
+	      }
 	    }
+	  }
+	  // Remove all other MEs that do not match the current RegExp.
+	  for (unsigned int j = 0; j < allHistos.size(); ++j)
+	  {
+	    std::vector<MonitorElement*>::iterator ime = toKeepFromPreviousSource.begin() ;
+	    std::vector<MonitorElement*>::iterator eme = toKeepFromPreviousSource.end() ;
+	    bool skip = false ;
+	    for(; ime != eme ; ++ime)
+	    {
+	      if(*ime == allHistos[j])
+	      {
+		skip = true ;
+		break ;
+	      }
+	    }
+	    if(!skip)
+	    {
+	      store.removeElement(allHistos[j]->getPathname(), allHistos[j]->getName()) ;
+	      //  			      std::cout << "Removing "  << me.getName() 
+	      //  					<< "from "      << me.getPathname() 
+	      // 					<< "\tsize is " << allHistos.size() 
+	      // 				<< std::	endl ;
+	    }
+	  }
 	}
       catch (std::exception &e)
 	{
