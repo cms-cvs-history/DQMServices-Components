@@ -1,10 +1,11 @@
 
+
 /** \file MEtoEDMConverter.cc
  *  
  *  See header file for description of class
  *
- *  $Date: 2010/09/14 09:12:54 $
- *  $Revision: 1.31 $
+ *  $Date: 2013/05/17 21:56:01 $
+ *  $Revision: 1.33 $
  *  \author M. Strang SUNY-Buffalo
  */
 
@@ -249,7 +250,7 @@ MEtoEDMConverter::endJob(void)
 }
 
 void
-MEtoEDMConverter::beginRun(edm::Run& iRun, const edm::EventSetup& iSetup)
+MEtoEDMConverter::beginRun(edm::Run const& iRun, const edm::EventSetup& iSetup)
 {
   std::string MsgLoggerCat = "MEtoEDMConverter_beginRun";
     
@@ -333,20 +334,20 @@ MEtoEDMConverter::beginRun(edm::Run& iRun, const edm::EventSetup& iSetup)
 
   } // end loop through monitor elements
 }
+void
+MEtoEDMConverter::endRun(edm::Run const& iRun, const edm::EventSetup& iSetup)
+{
+}
 
 void
-MEtoEDMConverter::endRun(edm::Run& iRun, const edm::EventSetup& iSetup)
+MEtoEDMConverter::endRunProduce(edm::Run& iRun, const edm::EventSetup& iSetup)
 {
+  dbe->scaleElements();
   putData(iRun, false);
 }
 
 void
-MEtoEDMConverter::beginLuminosityBlock(edm::LuminosityBlock& iLumi, const edm::EventSetup& iSetup)
-{
-}
-
-void
-MEtoEDMConverter::endLuminosityBlock(edm::LuminosityBlock& iLumi, const edm::EventSetup& iSetup)
+MEtoEDMConverter::endLuminosityBlockProduce(edm::LuminosityBlock& iLumi, const edm::EventSetup& iSetup)
 {
   putData(iLumi, true);
 }
